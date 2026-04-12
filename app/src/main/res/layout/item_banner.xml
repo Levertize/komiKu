@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  BANNER ITEM untuk ViewPager2 di Home
+  Sesuai desain HTML:
+  - Background dark gradient
+  - Accent diagonal bar di kanan
+  - Badge TRENDING
+  - Judul + chapter komik
+  - Author + update info
+  - Pagination dots di bawah kanan
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_card2">
+
+    <!-- Background gradient utama -->
+    <View
+        android:id="@+id/banner_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_banner_dark" />
+
+    <!-- Accent bar diagonal di kanan -->
+    <View
+        android:id="@+id/banner_accent"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_banner_accent" />
+
+    <!-- Badge TRENDING (kiri atas) -->
+    <TextView
+        android:id="@+id/tv_banner_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRENDING"
+        android:textSize="7sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:letterSpacing="0.06"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@drawable/bg_badge_accent"
+        android:layout_margin="12dp" />
+
+    <!-- Info komik (kiri bawah) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="110dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/tv_banner_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#F0EEF8"
+            android:lineSpacingMultiplier="1.2" />
+
+        <TextView
+            android:id="@+id/tv_banner_meta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9sp"
+            android:textColor="#61F0EEF8"
+            android:layout_marginTop="3dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

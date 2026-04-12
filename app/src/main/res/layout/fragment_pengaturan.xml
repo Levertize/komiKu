@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  PENGATURAN (SETTINGS) FRAGMENT
+  Komponen: Header + grouped setting rows
+  Dark mode toggle: langsung memanggil AppCompatDelegate.setDefaultNightMode()
+-->
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_bg"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_title"
+            android:textSize="@dimen/text_xl"
+            android:textStyle="bold"
+            android:textColor="@color/dk_text"
+            android:fontFamily="@font/plus_jakarta_sans_bold"
+            android:letterSpacing="-0.02"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="8dp" />
+
+        <!-- ── GROUP: TAMPILAN ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_display"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.09"
+            android:textColor="@color/accent"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="6dp" />
+
+        <!-- Dark Mode row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_setting_row"
+                android:padding="11dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_box"
+                    android:layout_height="@dimen/setting_icon_box"
+                    android:src="@drawable/ic_sun"
+                    android:background="@drawable/bg_setting_icon_purple"
+                    app:tint="@color/accent"
+                    android:padding="7dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_dark_mode"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dk_text" />
+
+                    <TextView
+                        android:id="@+id/tv_dark_mode_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_dark_mode_sub"
+                        android:textSize="9sp"
+                        android:textColor="@color/dk_muted" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_dark_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:textOn=""
+                    android:textOff=""
+                    app:trackTint="@drawable/selector_switch_track"
+                    app:thumbTint="@color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Mode membaca row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:id="@+id/row_read_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_setting_row"
+                android:padding="11dp"
+
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_box"
+                    android:layout_height="@dimen/setting_icon_box"
+                    android:src="@drawable/ic_read_mode"
+                    android:background="@drawable/bg_setting_icon_soft"
+                    app:tint="@color/accent_soft"
+                    android:padding="7dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_read_mode"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dk_text" />
+
+                    <TextView
+                        android:id="@+id/tv_read_mode_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_read_mode_sub"
+                        android:textSize="9sp"
+                        android:textColor="@color/dk_muted" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/dk_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Kualitas gambar row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:id="@+id/row_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_setting_row"
+                android:padding="11dp"
+
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_box"
+                    android:layout_height="@dimen/setting_icon_box"
+                    android:src="@drawable/ic_quality"
+                    android:background="@drawable/bg_setting_icon_purple"
+                    app:tint="@color/accent"
+                    android:padding="7dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_quality"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dk_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_quality_sub"
+                        android:textSize="9sp"
+                        android:textColor="@color/dk_muted" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/dk_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ── GROUP: NOTIFIKASI ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_notif"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.09"
+            android:textColor="@color/accent"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp" />
+
+        <!-- Update chapter row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_setting_row"
+                android:padding="11dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_box"
+                    android:layout_height="@dimen/setting_icon_box"
+                    android:src="@drawable/ic_bell"
+                    android:background="@drawable/bg_setting_icon_green"
+                    app:tint="@color/color_new"
+                    android:padding="7dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_notif_update"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/dk_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_notif_update_sub"
+                        android:textSize="9sp"
+                        android:textColor="@color/dk_muted" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:textOn=""
+                    android:textOff=""
+                    app:trackTint="@drawable/selector_switch_track"
+                    app:thumbTint="@color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ── GROUP: AKUN ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_account"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.09"
+            android:textColor="@color/accent"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp" />
+
+        <!-- Logout row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="32dp">
+
+            <LinearLayout
+                android:id="@+id/row_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_setting_row"
+                android:padding="11dp"
+
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_box"
+                    android:layout_height="@dimen/setting_icon_box"
+                    android:src="@drawable/ic_logout"
+                    android:background="@drawable/bg_setting_icon_red"
+                    app:tint="@color/color_hot"
+                    android:padding="7dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_logout"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_hot" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_logout_sub"
+                        android:textSize="9sp"
+                        android:textColor="@color/dk_muted" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/dk_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

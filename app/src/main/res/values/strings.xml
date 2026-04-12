@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KomiKu</string>
+    <string name="app_tagline">Baca komik favoritmu</string>
+
+    <!-- Auth -->
+    <string name="login_title">Selamat\ndatang kembali</string>
+    <string name="login_subtitle">Masuk untuk lanjut baca</string>
+    <string name="label_email">EMAIL</string>
+    <string name="label_password">PASSWORD</string>
+    <string name="hint_email">user@email.com</string>
+    <string name="hint_password">Masukkan password</string>
+    <string name="remember_me">Ingat saya</string>
+    <string name="forgot_password">Lupa password?</string>
+    <string name="btn_login">Masuk</string>
+    <string name="or_login_with">atau masuk dengan</string>
+    <string name="btn_facebook">Facebook</string>
+    <string name="btn_google">Google</string>
+    <string name="no_account">Belum punya akun? </string>
+    <string name="register_free">Daftar gratis</string>
+
+    <!-- Bottom Nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Jelajahi</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_account">Akun</string>
+
+    <!-- Home -->
+    <string name="section_popular">Terpopuler hari ini</string>
+    <string name="section_others">Komik lainnya</string>
+    <string name="see_all">Semua</string>
+    <string name="hint_search_home">Cari judul komik...</string>
+    <string name="badge_hot">HOT</string>
+    <string name="badge_new">NEW</string>
+    <string name="badge_update">UPDATE</string>
+    <string name="badge_trending">TRENDING</string>
+
+    <!-- Jelajahi -->
+    <string name="hint_search_explore">Cari judul, author, genre...</string>
+    <string name="filter_format">FORMAT</string>
+    <string name="filter_genre">GENRE</string>
+    <string name="filter_sort">URUTKAN</string>
+    <string name="fmt_manga">Manga</string>
+    <string name="fmt_manhwa">Manhwa</string>
+    <string name="fmt_manhua">Manhua</string>
+    <string name="fmt_webtoon">Webtoon</string>
+    <string name="sort_popular">Terpopuler</string>
+    <string name="sort_latest">Terakhir diupdate</string>
+    <string name="sort_rating">Rating tertinggi</string>
+    <string name="sort_az">A → Z</string>
+    <string name="sort_za">Z → A</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_apply_filter">Terapkan filter</string>
+    <string name="sort_desc">↓ DESC</string>
+    <string name="sort_asc">↑ ASC</string>
+    <string name="results_found">%d hasil ditemukan</string>
+
+    <!-- Library -->
+    <string name="library_title">Library</string>
+    <string name="hint_search_library">Cari di koleksi...</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_display">TAMPILAN</string>
+    <string name="settings_notif">NOTIFIKASI</string>
+    <string name="settings_account">AKUN</string>
+    <string name="setting_dark_mode">Dark Mode</string>
+    <string name="setting_dark_mode_sub">Aktif · Nyaman untuk mata</string>
+    <string name="setting_read_mode">Mode membaca</string>
+    <string name="setting_read_mode_sub">Scroll vertikal</string>
+    <string name="setting_quality">Kualitas gambar</string>
+    <string name="setting_quality_sub">HD · Otomatis</string>
+    <string name="setting_notif_update">Update chapter</string>
+    <string name="setting_notif_update_sub">Notif komik baru</string>
+    <string name="setting_logout">Keluar</string>
+    <string name="setting_logout_sub">Logout dari akun</string>
+
+    <!-- Reading -->
+    <string name="btn_back">Kembali</string>
+    <string name="btn_menu">Menu</string>
+    <string name="btn_prev">Sebelumnya</string>
+    <string name="btn_next">Selanjutnya</string>
+</resources>

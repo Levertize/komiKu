@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  JELAJAHI FRAGMENT
+  Komponen utama:
+  - SearchBar + FilterButton
+  - Active filter chips (HorizontalScrollView)
+  - FilterPanel (ConstraintLayout, GONE by default, VISIBLE saat icon filter diklik)
+  - Sort bar + result count (VISIBLE setelah filter diterapkan)
+  - RecyclerView list komik (LinearLayoutManager)
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_bg">
+
+    <!-- ── SEARCH HEADER ── -->
+    <LinearLayout
+        android:id="@+id/search_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Search row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <!-- Search box -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_box"
+                android:paddingStart="13dp"
+                android:paddingEnd="13dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="@color/dk_hint"
+                        android:alpha="0.5" />
+
+                    <EditText
+                        android:id="@+id/et_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_search_explore"
+                        android:textSize="10.5sp"
+                        android:textColor="@color/dk_text"
+                        android:textColorHint="@color/dk_muted"
+                        android:background="@null"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <!-- Clear button -->
+                <ImageButton
+                    android:id="@+id/btn_clear_search"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:src="@drawable/ic_close"
+                    android:background="@drawable/bg_clear_btn"
+                    app:tint="@color/dk_muted"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <!-- Filter icon button -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_filter"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:icon="@drawable/ic_filter"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/accent"
+                    app:cornerRadius="11dp"
+                    android:backgroundTint="@color/accent_dim"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/accent_border" />
+
+                <!-- Active filter badge -->
+                <View
+                    android:id="@+id/badge_filter"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_badge_red"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Active chips horizontal scroll -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="6dp">
+
+                <!-- chips ditambahkan secara dinamis dari kode -->
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <!-- Bottom border -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/dk_border" />
+
+    </LinearLayout>
+
+    <!-- ── FILTER PANEL (default GONE, muncul saat btn_filter diklik) ── -->
+    <ScrollView
+        android:id="@+id/panel_filter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/search_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <!-- Filter card container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_filter_card"
+                android:padding="14dp"
+                >
+
+                <!-- FORMAT section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_format"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/accent"
+                    android:alpha="0.8" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_format"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="false"
+                    app:chipSpacingHorizontal="5dp"
+                    app:chipSpacingVertical="5dp">
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.KomiKu.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fmt_manga" />
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.KomiKu.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fmt_manhwa" />
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.KomiKu.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fmt_manhua" />
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.KomiKu.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fmt_webtoon" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Divider -->
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+
+                <!-- GENRE section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_genre"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/accent"
+                    android:alpha="0.8" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="false"
+                    app:chipSpacingHorizontal="5dp"
+                    app:chipSpacingVertical="5dp">
+
+                    <!-- Genre chips — bisa ditambah dinamis dari API -->
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Action" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Romance" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fantasy" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Horror" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Comedy" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Slice of life" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sci-fi" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sports" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Divider -->
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+
+                <!-- SORT section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_sort"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/accent"
+                    android:alpha="0.8" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_sort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:chipSpacingHorizontal="5dp"
+                    app:chipSpacingVertical="5dp">
+
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_popular" android:checked="true" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_latest" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_rating" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_az" />
+                    <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/sort_za" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Divider -->
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+
+                <!-- Action buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_reset_filter"
+                        style="@style/Widget.KomiKu.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/btn_reset" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_apply_filter"
+                        style="@style/Widget.KomiKu.Button.Primary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/btn_apply_filter" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- ── RESULT SECTION (GONE by default, VISIBLE setelah filter apply) ── -->
+    <LinearLayout
+        android:id="@+id/layout_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/search_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Sort bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Urut:"
+                android:textSize="9.5sp"
+                android:textColor="@color/dk_muted" />
+
+            <TextView
+                android:id="@+id/tv_active_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_popular"
+                android:textSize="9.5sp"
+                android:textStyle="bold"
+                android:textColor="@color/dk_text"
+                android:layout_marginStart="5dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- DESC / ASC toggle -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_sort_toggle"
+                android:padding="3dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btn_sort_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_desc"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent"
+                    android:background="@drawable/bg_sort_active"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/btn_sort_asc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_asc"
+                    android:textSize="8.5sp"
+                    android:textColor="@color/dk_muted"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Result count -->
+        <TextView
+            android:id="@+id/tv_result_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="14dp"
+            android:paddingBottom="6dp"
+            android:text="0 hasil ditemukan"
+            android:textSize="9sp"
+            android:textColor="@color/dk_hint" />
+
+        <!-- Comic list RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_explore_results"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="8dp"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

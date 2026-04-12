@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.KomiKu" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorPrimaryVariant">@color/accent_soft</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent_soft</item>
+        <item name="colorSurface">@color/dk_card</item>
+        <item name="colorOnSurface">@color/dk_text</item>
+        <item name="android:windowBackground">@color/dk_bg</item>
+        <item name="android:statusBarColor">@color/dk_bg</item>
+        <item name="android:navigationBarColor">@color/dk_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Ini kunci utama biar konten tidak naik ke balik status bar -->
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <!-- Splash theme -->
+    <style name="Theme.KomiKu.Splash" parent="Theme.KomiKu">
+        <item name="android:windowBackground">@color/dk_bg</item>
+        <item name="android:statusBarColor">@color/dk_bg</item>
+    </style>
+
+    <!-- Reading mode theme -->
+    <style name="Theme.KomiKu.Reading" parent="Theme.KomiKu">
+        <item name="android:windowBackground">@color/read_bg</item>
+        <item name="android:statusBarColor">@color/read_bg</item>
+        <item name="android:navigationBarColor">@color/read_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Button Primary -->
+    <style name="Widget.KomiKu.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">13sp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <!-- Button Outline -->
+    <style name="Widget.KomiKu.Button.Outline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/accent_border</item>
+        <item name="android:textColor">@color/dk_muted</item>
+        <item name="android:textSize">10sp</item>
+        <item name="cornerRadius">9dp</item>
+    </style>
+
+    <!-- Card -->
+    <style name="Widget.KomiKu.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/dk_card</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">13dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/dk_border</item>
+    </style>
+
+    <!-- Bottom Nav -->
+    <style name="Widget.KomiKu.BottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/dk_card</item>
+        <item name="itemIconTint">@drawable/selector_nav_icon</item>
+        <item name="itemTextColor">@drawable/selector_nav_text</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <!-- Input field -->
+    <style name="Widget.KomiKu.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/dk_card</item>
+        <item name="boxStrokeColor">@color/accent_border</item>
+        <item name="boxCornerRadiusTopStart">11dp</item>
+        <item name="boxCornerRadiusTopEnd">11dp</item>
+        <item name="boxCornerRadiusBottomStart">11dp</item>
+        <item name="boxCornerRadiusBottomEnd">11dp</item>
+        <item name="hintTextColor">@color/dk_muted</item>
+        <item name="android:textColorHint">@color/dk_hint</item>
+    </style>
+
+    <!-- Chip -->
+    <style name="Widget.KomiKu.Chip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@drawable/selector_chip_bg</item>
+        <item name="chipStrokeColor">@drawable/selector_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@drawable/selector_chip_text</item>
+        <item name="android:textSize">9.5sp</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">28dp</item>
+    </style>
+
+</resources>

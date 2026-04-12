@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ITEM: Comic card untuk grid 3 kolom (Home screen)
+  Digunakan oleh: HomeAdapter (rv_popular, rv_others)
+  Layout: thumbnail 3:4 + badge + judul + nomor chapter
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    android:padding="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Thumbnail wrapper (rasio 3:4) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/frame_thumb">
+
+        <!-- Gunakan ConstraintLayout dengan ratio untuk aspect 3:4 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_comic_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:background="@color/dk_card2"
+                android:contentDescription="Cover komik"
+                app:layout_constraintDimensionRatio="3:4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Badge HOT / NEW / UPDATE -->
+            <TextView
+                android:id="@+id/tv_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="6.5sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/bg_badge_hot"
+                android:letterSpacing="0.05"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="@id/iv_comic_thumb"
+                app:layout_constraintStart_toStartOf="@id/iv_comic_thumb"
+                android:layout_margin="5dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+    <!-- Comic title -->
+    <TextView
+        android:id="@+id/tv_comic_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="@color/dk_text"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Chapter info -->
+    <TextView
+        android:id="@+id/tv_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="8sp"
+        android:textColor="@color/dk_hint"
+        android:gravity="center" />
+
+</LinearLayout>

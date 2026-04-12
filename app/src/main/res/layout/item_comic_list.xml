@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ITEM: Comic row untuk list Jelajahi
+  Digunakan oleh: ExploreAdapter (rv_explore_results)
+  Layout: thumbnail | info (judul, author, tags, stats) | rating + waktu + bookmark
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="top"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Thumbnail -->
+    <FrameLayout
+        android:layout_width="@dimen/comic_list_thumb_width"
+        android:layout_height="@dimen/comic_list_thumb_height"
+        android:layout_gravity="top">
+
+        <ImageView
+            android:id="@+id/iv_list_thumb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@color/dk_card2"
+            android:contentDescription="Cover"
+            android:src="@drawable/ic_placeholder_thumb" />
+
+        <!-- Badge -->
+        <TextView
+            android:id="@+id/tv_list_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="4dp"
+            android:textSize="6sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:background="@drawable/bg_badge_hot"
+            android:letterSpacing="0.04"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- Body info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tv_list_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/dk_text"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Author -->
+        <TextView
+            android:id="@+id/tv_list_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9sp"
+            android:textColor="@color/dk_muted" />
+
+        <!-- Tags (format + genre) -->
+        <LinearLayout
+            android:id="@+id/ll_tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="2dp" />
+
+        <!-- Stats row (views + chapters) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+
+            android:layout_marginTop="3dp">
+
+            <!-- Views -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_eye"
+                    app:tint="@color/dk_hint"
+                    android:alpha="0.6" />
+
+                <TextView
+                    android:id="@+id/tv_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8.5sp"
+                    android:textColor="@color/dk_hint" />
+
+            </LinearLayout>
+
+            <!-- Chapters -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_chapter"
+                    app:tint="@color/dk_hint"
+                    android:alpha="0.6" />
+
+                <TextView
+                    android:id="@+id/tv_chapters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8.5sp"
+                    android:textColor="@color/dk_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Right: rating + update time + bookmark -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="end"
+        >
+
+        <!-- Rating -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/ic_star"
+                app:tint="@color/color_update" />
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9.5sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_update" />
+
+        </LinearLayout>
+
+        <!-- Last update -->
+        <TextView
+            android:id="@+id/tv_update_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8sp"
+            android:textColor="@color/dk_hint" />
+
+        <!-- Bookmark button -->
+        <ImageButton
+            android:id="@+id/btn_list_bookmark"
+            android:layout_width="@dimen/bookmark_btn_size"
+            android:layout_height="@dimen/bookmark_btn_size"
+            android:src="@drawable/ic_bookmark"
+            android:background="@drawable/bg_bookmark_btn"
+            app:tint="@color/accent"
+            android:contentDescription="Simpan ke library"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

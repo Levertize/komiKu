@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment android:id="@+id/nav_home"
+        android:name="com.kelompok1.komiku.HomeFragment"
+        android:label="Home" />
+
+    <fragment android:id="@+id/nav_explore"
+        android:name="com.kelompok1.komiku.JelajahiFragment"
+        android:label="Jelajahi" />
+
+    <fragment android:id="@+id/nav_library"
+        android:name="com.kelompok1.komiku.LibraryFragment"
+        android:label="Library" />
+
+    <fragment android:id="@+id/nav_account"
+        android:name="com.kelompok1.komiku.PengaturanFragment"
+        android:label="Pengaturan" />
+
+</navigation>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Accent -->
+    <color name="accent">#7C5CFC</color>
+    <color name="accent_soft">#C084FC</color>
+    <color name="accent_dim">#1F7C5CFC</color>
+    <color name="accent_border">#407C5CFC</color>
+
+    <!-- Dark Mode Background -->
+    <color name="dk_bg">#0D0D14</color>
+    <color name="dk_card">#13131F</color>
+    <color name="dk_card2">#1A1A2E</color>
+    <color name="dk_border">#0FFFFFFF</color>
+
+    <!-- Dark Mode Text -->
+    <color name="dk_text">#F0EEF8</color>
+    <color name="dk_muted">#61F0EEF8</color>
+    <color name="dk_hint">#2EF0EEF8</color>
+
+    <!-- Light Mode Background -->
+    <color name="lt_bg">#F4F2FC</color>
+    <color name="lt_card">#FFFFFF</color>
+    <color name="lt_card2">#EDE9FD</color>
+    <color name="lt_border">#1A7C5CFC</color>
+
+    <!-- Light Mode Text -->
+    <color name="lt_text">#1A1630</color>
+    <color name="lt_muted">#6B1A1630</color>
+    <color name="lt_hint">#2E1A1630</color>
+
+    <!-- Semantic -->
+    <color name="color_hot">#F43F5E</color>
+    <color name="color_new">#10B981</color>
+    <color name="color_update">#F59E0B</color>
+    <color name="color_manhwa">#10B981</color>
+
+    <!-- Banner gradient colors -->
+    <color name="banner_start">#13082A</color>
+    <color name="banner_end">#0A1230</color>
+
+    <!-- Reading mode -->
+    <color name="read_bg">#07070F</color>
+
+    <!-- System -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>
