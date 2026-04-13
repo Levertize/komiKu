@@ -1,7 +1,14 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.KomiKu" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.KomiKu" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorSurface">@color/dk_card</item>
+        <item name="colorOnSurface">@color/dk_text</item>
+        <item name="colorControlNormal">@color/dk_muted</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="android:windowBackground">@color/dk_bg</item>
+        <item name="android:statusBarColor">@color/dk_bg</item>
+        <item name="android:navigationBarColor">@color/dk_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

@@ -66,7 +66,16 @@ class LibraryFragment : Fragment() {
                         it.comic.title.lowercase().contains(query)
                     }.toMutableList()
                 }
-                libraryAdapter = LibraryAdapter(filteredItems) {}
+                // Pastikan onClick tetap ada saat search!
+                libraryAdapter = LibraryAdapter(filteredItems) { item ->
+                    val intent = android.content.Intent(requireContext(), ReadingActivity::class.java).apply {
+                        putExtra("comic_title", item.comic.title)
+                        putExtra("comic_chapter", item.progressText)
+                        putExtra("color_start", item.comic.coverColorStart)
+                        putExtra("color_end", item.comic.coverColorEnd)
+                    }
+                    startActivity(intent)
+                }
                 binding.rvLibrary.adapter = libraryAdapter
                 updateEmptyState()
                 updateCount()

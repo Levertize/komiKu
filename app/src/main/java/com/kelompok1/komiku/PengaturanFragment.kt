@@ -34,17 +34,19 @@ class PengaturanFragment : Fragment() {
         updateDarkModeStatus(isDark)
 
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            // Simpan preferensi
             prefs.edit().putBoolean("dark_mode", isChecked).apply()
+            updateDarkModeStatus(isChecked)
 
-            // Terapkan mode
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
 
-            // Update teks status
-            updateDarkModeStatus(isChecked)
+            // Animasi aman pakai overridePendingTransition saja
+            requireActivity().overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
         }
     }
 

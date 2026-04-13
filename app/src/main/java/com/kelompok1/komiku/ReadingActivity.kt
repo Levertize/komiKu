@@ -12,7 +12,9 @@ class ReadingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReadingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         binding = ActivityReadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,5 +46,9 @@ class ReadingActivity : AppCompatActivity() {
         binding.btnNextChapter.setOnClickListener {
             binding.tvReadChapter.text = "Chapter berikutnya · Hal. 1/$totalPages"
         }
+        // Force dark di reading mode
+        window.statusBarColor = android.graphics.Color.parseColor("#07070F")
+        window.navigationBarColor = android.graphics.Color.parseColor("#07070F")
     }
+
 }

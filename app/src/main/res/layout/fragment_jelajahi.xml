@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  JELAJAHI FRAGMENT
-  Komponen utama:
-  - SearchBar + FilterButton
-  - Active filter chips (HorizontalScrollView)
-  - FilterPanel (ConstraintLayout, GONE by default, VISIBLE saat icon filter diklik)
-  - Sort bar + result count (VISIBLE setelah filter diterapkan)
-  - RecyclerView list komik (LinearLayoutManager)
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -34,8 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            >
+            android:gravity="center_vertical">
 
             <!-- Search box -->
             <FrameLayout
@@ -50,8 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="13dp"
@@ -88,39 +77,16 @@
 
             </FrameLayout>
 
-            <!-- Filter icon button -->
-            <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_filter"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:icon="@drawable/ic_filter"
-                    app:iconSize="15dp"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:iconTint="@color/accent"
-                    app:cornerRadius="11dp"
-                    android:backgroundTint="@color/accent_dim"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/accent_border" />
-
-                <!-- Active filter badge -->
-                <View
-                    android:id="@+id/badge_filter"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/bg_badge_red"
-                    android:visibility="gone" />
-
-            </FrameLayout>
+            <!-- Filter button — pakai ImageButton biar icon center sempurna -->
+            <ImageButton
+                android:id="@+id/btn_filter"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_filter"
+                android:background="@drawable/bg_filter_btn"
+                android:padding="10dp"
+                android:contentDescription="Filter" />
 
         </LinearLayout>
 
@@ -138,9 +104,6 @@
                 android:layout_height="wrap_content"
                 app:singleLine="true"
                 app:chipSpacingHorizontal="6dp">
-
-                <!-- chips ditambahkan secara dinamis dari kode -->
-
             </com.google.android.material.chip.ChipGroup>
 
         </HorizontalScrollView>
@@ -154,7 +117,7 @@
 
     </LinearLayout>
 
-    <!-- ── FILTER PANEL (default GONE, muncul saat btn_filter diklik) ── -->
+    <!-- ── FILTER PANEL ── -->
     <ScrollView
         android:id="@+id/panel_filter"
         android:layout_width="match_parent"
@@ -173,16 +136,14 @@
             android:orientation="vertical"
             android:padding="14dp">
 
-            <!-- Filter card container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_filter_card"
-                android:padding="14dp"
-                >
+                android:padding="14dp">
 
-                <!-- FORMAT section -->
+                <!-- FORMAT -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -206,19 +167,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fmt_manga" />
-
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.KomiKu.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fmt_manhwa" />
-
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.KomiKu.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fmt_manhua" />
-
                     <com.google.android.material.chip.Chip
                         style="@style/Widget.KomiKu.Chip"
                         android:layout_width="wrap_content"
@@ -227,10 +185,11 @@
 
                 </com.google.android.material.chip.ChipGroup>
 
-                <!-- Divider -->
-                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/dk_border" android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"/>
 
-                <!-- GENRE section -->
+                <!-- GENRE -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -249,7 +208,6 @@
                     app:chipSpacingHorizontal="5dp"
                     app:chipSpacingVertical="5dp">
 
-                    <!-- Genre chips — bisa ditambah dinamis dari API -->
                     <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Action" />
                     <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Romance" />
                     <com.google.android.material.chip.Chip style="@style/Widget.KomiKu.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fantasy" />
@@ -261,10 +219,11 @@
 
                 </com.google.android.material.chip.ChipGroup>
 
-                <!-- Divider -->
-                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/dk_border" android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"/>
 
-                <!-- SORT section -->
+                <!-- SORT -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -292,8 +251,9 @@
 
                 </com.google.android.material.chip.ChipGroup>
 
-                <!-- Divider -->
-                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dk_border" />
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/dk_border" android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"/>
 
                 <!-- Action buttons -->
                 <LinearLayout
@@ -333,7 +293,7 @@
 
     </ScrollView>
 
-    <!-- ── RESULT SECTION (GONE by default, VISIBLE setelah filter apply) ── -->
+    <!-- ── RESULT SECTION ── -->
     <LinearLayout
         android:id="@+id/layout_results"
         android:layout_width="match_parent"
@@ -431,7 +391,7 @@
             android:textSize="9sp"
             android:textColor="@color/dk_hint" />
 
-        <!-- Comic list RecyclerView -->
+        <!-- Comic list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_explore_results"
             android:layout_width="match_parent"

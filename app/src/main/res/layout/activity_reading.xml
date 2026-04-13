@@ -26,7 +26,8 @@
         android:paddingEnd="12dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="@color/read_bg"
+        android:background="#0D0D14"
+
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -182,7 +183,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/read_bg"
+        android:background="#0D0D14"
         android:paddingTop="8dp"
         android:paddingBottom="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -205,14 +206,14 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_menu_lines"
-                app:tint="@color/dk_muted" />
+                app:tint="#61F0EEF8" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_menu"
                 android:textSize="8sp"
-                android:textColor="@color/dk_hint" />
+                android:textColor="#2EF0EEF8" />
 
         </LinearLayout>
 
@@ -259,7 +260,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_chevron_right"
-                app:tint="@color/dk_text"
+                app:tint="#F0EEF8"
                 android:alpha="0.6" />
 
             <TextView

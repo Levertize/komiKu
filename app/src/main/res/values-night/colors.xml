@@ -5,22 +5,22 @@
     <color name="accent_dim">#1F7C5CFC</color>
     <color name="accent_border">#407C5CFC</color>
 
-    <!-- LIGHT MODE (default) -->
-    <color name="dk_bg">#F4F2FC</color>
-    <color name="dk_card">#FFFFFF</color>
-    <color name="dk_card2">#EDE9FD</color>
-    <color name="dk_border">#1A7C5CFC</color>
-    <color name="dk_text">#1A1630</color>
-    <color name="dk_muted">#661A1630</color>
-    <color name="dk_hint">#331A1630</color>
+    <!-- DARK MODE -->
+    <color name="dk_bg">#0D0D14</color>
+    <color name="dk_card">#13131F</color>
+    <color name="dk_card2">#1A1A2E</color>
+    <color name="dk_border">#0FFFFFFF</color>
+    <color name="dk_text">#F0EEF8</color>
+    <color name="dk_muted">#61F0EEF8</color>
+    <color name="dk_hint">#2EF0EEF8</color>
 
-    <color name="lt_bg">#F4F2FC</color>
-    <color name="lt_card">#FFFFFF</color>
-    <color name="lt_card2">#EDE9FD</color>
-    <color name="lt_border">#1A7C5CFC</color>
-    <color name="lt_text">#1A1630</color>
-    <color name="lt_muted">#661A1630</color>
-    <color name="lt_hint">#331A1630</color>
+    <color name="lt_bg">#0D0D14</color>
+    <color name="lt_card">#13131F</color>
+    <color name="lt_card2">#1A1A2E</color>
+    <color name="lt_border">#0FFFFFFF</color>
+    <color name="lt_text">#F0EEF8</color>
+    <color name="lt_muted">#61F0EEF8</color>
+    <color name="lt_hint">#2EF0EEF8</color>
 
     <color name="color_hot">#F43F5E</color>
     <color name="color_new">#10B981</color>
