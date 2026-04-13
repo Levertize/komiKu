@@ -42,7 +42,7 @@ class ComicListAdapter(
             GradientDrawable.Orientation.TL_BR,
             intArrayOf(comic.coverColorStart, comic.coverColorEnd)
         )
-        gradient.cornerRadius = 10f * dp
+        gradient.cornerRadius = 10f * dp  // ← tambah/update ini
         holder.vThumb.background = gradient
 
         // Badge

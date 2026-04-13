@@ -39,14 +39,19 @@ class LibraryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         libraryAdapter = LibraryAdapter(filteredItems) { item ->
-            // TODO: navigate ke reading activity
+            // Pastikan bagian ini sudah ada Intent nya!
+            val intent = android.content.Intent(requireContext(), ReadingActivity::class.java).apply {
+                putExtra("comic_title", item.comic.title)
+                putExtra("comic_chapter", item.progressText)
+                putExtra("color_start", item.comic.coverColorStart)
+                putExtra("color_end", item.comic.coverColorEnd)
+            }
+            startActivity(intent)
         }
         binding.rvLibrary.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = libraryAdapter
         }
-
-        // Tampilkan empty state kalau kosong
         updateEmptyState()
     }
 

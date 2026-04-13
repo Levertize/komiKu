@@ -28,18 +28,31 @@ class PengaturanFragment : Fragment() {
         val prefs = requireContext()
             .getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
 
-        // Muat state dark mode yang tersimpan
-        binding.switchDarkMode.isChecked = prefs.getBoolean("dark_mode", true)
+        // Muat state tersimpan
+        val isDark = prefs.getBoolean("dark_mode", false) // ← samain false
+        binding.switchDarkMode.isChecked = isDark
+        updateDarkModeStatus(isDark)
 
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            val mode = if (isChecked) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-            AppCompatDelegate.setDefaultNightMode(mode)
+            // Simpan preferensi
             prefs.edit().putBoolean("dark_mode", isChecked).apply()
+
+            // Terapkan mode
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+
+            // Update teks status
+            updateDarkModeStatus(isChecked)
         }
+    }
+
+    private fun updateDarkModeStatus(isDark: Boolean) {
+        binding.tvDarkModeStatus.text = if (isDark)
+            "Aktif · Nyaman untuk mata"
+        else
+            "Nonaktif · Mode terang"
     }
 
     override fun onDestroyView() {

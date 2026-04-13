@@ -18,9 +18,9 @@
 
     <!-- Thumbnail wrapper (rasio 3:4) -->
     <FrameLayout
+        android:id="@+id/frame_thumb"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/frame_thumb">
+        android:layout_height="wrap_content">
 
         <!-- Gunakan ConstraintLayout dengan ratio untuk aspect 3:4 -->
         <androidx.constraintlayout.widget.ConstraintLayout

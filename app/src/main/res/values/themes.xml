@@ -12,8 +12,11 @@
         <item name="android:statusBarColor">@color/dk_bg</item>
         <item name="android:navigationBarColor">@color/dk_bg</item>
         <item name="android:windowLightStatusBar">false</item>
-        <!-- Ini kunci utama biar konten tidak naik ke balik status bar -->
         <item name="android:fitsSystemWindows">true</item>
+
+        <!-- Ini yang bikin icon vector ikut berubah warna -->
+        <item name="colorControlNormal">@color/dk_text</item>
+        <item name="colorControlActivated">@color/accent</item>
     </style>
 
     <!-- Splash theme -->
@@ -87,6 +90,20 @@
         <item name="android:textSize">9.5sp</item>
         <item name="chipCornerRadius">20dp</item>
         <item name="chipMinHeight">28dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipIconVisible">false</item>
+        <item name="rippleColor">#1A7C5CFC</item>
+    </style>
+
+    <!-- Light Mode override -->
+    <style name="Theme.KomiKu.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorPrimaryVariant">@color/accent_soft</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:windowBackground">@color/lt_bg</item>
+        <item name="android:statusBarColor">@color/lt_bg</item>
+        <item name="android:navigationBarColor">@color/lt_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 </resources>
