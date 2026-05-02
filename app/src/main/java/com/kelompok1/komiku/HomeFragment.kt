@@ -1,5 +1,6 @@
 package com.kelompok1.komiku
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -56,6 +57,23 @@ class HomeFragment : Fragment() {
         val banners = DummyData.bannerComics
         binding.vpBanner.adapter = BannerAdapter(banners)
         binding.vpBanner.offscreenPageLimit = 1
+
+        // Animasi Page Transformer
+        val pageMargin = (12 * resources.displayMetrics.density).toInt()
+        binding.vpBanner.setPageTransformer { page, position ->
+            val myOffset = position * -(2 * pageMargin)
+            if (position < -1) {
+                page.translationX = -myOffset
+            } else if (position <= 1) {
+                val scaleFactor = Math.max(0.9f, 1 - Math.abs(position) * 0.1f)
+                page.translationX = myOffset
+                page.scaleY = scaleFactor
+                page.alpha = scaleFactor
+            } else {
+                page.alpha = 0f
+                page.translationX = myOffset
+            }
+        }
 
         setupBannerDots(banners.size)
 
@@ -122,13 +140,23 @@ class HomeFragment : Fragment() {
 
     private fun setupPopularGrid() {
         binding.rvPopular.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvPopular.adapter = ComicGridAdapter(DummyData.popularComics)
+        binding.rvPopular.adapter = ComicGridAdapter(DummyData.popularComics) { comic ->
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
+            }
+            startActivity(intent)
+        }
         binding.rvPopular.isNestedScrollingEnabled = false
     }
 
     private fun setupOthersGrid() {
         binding.rvOthers.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvOthers.adapter = ComicGridAdapter(DummyData.otherComics)
+        binding.rvOthers.adapter = ComicGridAdapter(DummyData.otherComics) { comic ->
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
+            }
+            startActivity(intent)
+        }
         binding.rvOthers.isNestedScrollingEnabled = false
     }
 

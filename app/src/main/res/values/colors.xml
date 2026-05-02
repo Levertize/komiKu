@@ -28,7 +28,8 @@
     <color name="color_manhwa">#10B981</color>
     <color name="banner_start">#13082A</color>
     <color name="banner_end">#0A1230</color>
-    <color name="read_bg">#07070F</color>
+    <color name="read_bg">#F4F2FC</color>
+    <color name="read_bar_bg">#E6FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>

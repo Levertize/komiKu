@@ -8,13 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kelompok1.komiku.R
 
-class ReadingPageAdapter(
-    private val totalPages: Int,
-    private val colorStart: Int,
-    private val colorEnd: Int
-) : RecyclerView.Adapter<ReadingPageAdapter.ViewHolder>() {
+class ReadingPageAdapter(private val pages: List<Int>) :
+    RecyclerView.Adapter<ReadingPageAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val pageBg: View = view.findViewById(R.id.page_bg)
         val tvPageNum: TextView = view.findViewById(R.id.tv_page_num)
     }
@@ -26,14 +23,15 @@ class ReadingPageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dp = holder.itemView.resources.displayMetrics.density
-        val gradient = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(colorStart, colorEnd)
-        )
-        holder.pageBg.background = gradient
-        holder.tvPageNum.text = "${position + 1} / $totalPages"
+        val color = pages[position]
+
+        // Dummy page: cuma nampilin warna solid
+        val gd = GradientDrawable()
+        gd.setColor(color)
+        holder.pageBg.background = gd
+
+        holder.tvPageNum.text = "Halaman ${position + 1}"
     }
 
-    override fun getItemCount() = totalPages
+    override fun getItemCount() = pages.size
 }

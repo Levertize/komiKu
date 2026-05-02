@@ -16,7 +16,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dk_bg">
+    android:background="@color/dk_bg"
+    android:fitsSystemWindows="true">
 
     <!-- Fragment container -->
     <androidx.fragment.app.FragmentContainerView
@@ -31,24 +32,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Top border line above BottomNav -->
-    <View
-        android:id="@+id/nav_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/dk_border"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         style="@style/Widget.KomiKu.BottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="14dp"
+        android:minHeight="56dp"
         app:menu="@menu/menu_bottom_nav"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

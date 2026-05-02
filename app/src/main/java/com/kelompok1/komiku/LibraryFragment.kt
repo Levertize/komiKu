@@ -1,5 +1,6 @@
 package com.kelompok1.komiku
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -39,12 +40,11 @@ class LibraryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         libraryAdapter = LibraryAdapter(filteredItems) { item ->
-            // Pastikan bagian ini sudah ada Intent nya!
-            val intent = android.content.Intent(requireContext(), ReadingActivity::class.java).apply {
-                putExtra("comic_title", item.comic.title)
-                putExtra("comic_chapter", item.progressText)
-                putExtra("color_start", item.comic.coverColorStart)
-                putExtra("color_end", item.comic.coverColorEnd)
+            val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
+                putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
+                putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.currentChapter}")
+                putExtra(ReadingActivity.EXTRA_CHAPTER_ID, item.currentChapter)
+                putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
             }
             startActivity(intent)
         }
@@ -66,13 +66,12 @@ class LibraryFragment : Fragment() {
                         it.comic.title.lowercase().contains(query)
                     }.toMutableList()
                 }
-                // Pastikan onClick tetap ada saat search!
                 libraryAdapter = LibraryAdapter(filteredItems) { item ->
-                    val intent = android.content.Intent(requireContext(), ReadingActivity::class.java).apply {
-                        putExtra("comic_title", item.comic.title)
-                        putExtra("comic_chapter", item.progressText)
-                        putExtra("color_start", item.comic.coverColorStart)
-                        putExtra("color_end", item.comic.coverColorEnd)
+                    val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
+                        putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
+                        putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.currentChapter}")
+                        putExtra(ReadingActivity.EXTRA_CHAPTER_ID, item.currentChapter)
+                        putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
                     }
                     startActivity(intent)
                 }

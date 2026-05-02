@@ -11,14 +11,13 @@ import com.kelompok1.komiku.model.Comic
 
 class ComicGridAdapter(
     private val comics: List<Comic>,
-    private val onClick: (Comic) -> Unit = {}
+    private val onItemClick: ((Comic) -> Unit)? = null
 ) : RecyclerView.Adapter<ComicGridAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // iv_comic_thumb sekarang pakai View biasa, background = gradient
-        val vThumb: View = view.findViewById(R.id.iv_comic_thumb)
-        val tvBadge: TextView = view.findViewById(R.id.tv_badge)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.tv_comic_title)
+        val tvBadge: TextView = view.findViewById(R.id.tv_badge)
+        val ivThumb: View = view.findViewById(R.id.iv_comic_thumb)
         val tvChapter: TextView = view.findViewById(R.id.tv_chapter)
     }
 
@@ -30,38 +29,32 @@ class ComicGridAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comic = comics[position]
-        val dp = holder.itemView.resources.displayMetrics.density
+        holder.tvTitle.text = comic.title
+        holder.tvChapter.text = comic.chapter
 
-        // Gradient cover — set sebagai BACKGROUND, bukan image
-        val gradient = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
+        // Cover gradient
+        val gd = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(comic.coverColorStart, comic.coverColorEnd)
         )
-        gradient.cornerRadius = 10f * dp
-        holder.vThumb.background = gradient
+        gd.cornerRadius = 11 * holder.itemView.resources.displayMetrics.density
+        holder.ivThumb.background = gd
 
         // Badge
         if (comic.badge.isNotEmpty()) {
             holder.tvBadge.visibility = View.VISIBLE
             holder.tvBadge.text = comic.badge
-            val color = when (comic.badge) {
-                "HOT"    -> 0xFFF43F5E.toInt()
-                "NEW"    -> 0xFF10B981.toInt()
-                "UPDATE" -> 0xFFF59E0B.toInt()
-                else     -> 0xFF7C5CFC.toInt()
+            // Update badge background based on type
+            when (comic.badge) {
+                "HOT" -> holder.tvBadge.setBackgroundResource(R.drawable.bg_badge_hot)
+                "NEW" -> holder.tvBadge.setBackgroundResource(R.drawable.bg_badge_new)
+                "UPDATE" -> holder.tvBadge.setBackgroundResource(R.drawable.bg_badge_accent)
             }
-            val bg = GradientDrawable().also {
-                it.setColor(color)
-                it.cornerRadius = 4f * dp
-            }
-            holder.tvBadge.background = bg
         } else {
             holder.tvBadge.visibility = View.GONE
         }
 
-        holder.tvTitle.text = comic.title
-        holder.tvChapter.text = comic.chapter
-        holder.itemView.setOnClickListener { onClick(comic) }
+        holder.itemView.setOnClickListener { onItemClick?.invoke(comic) }
     }
 
     override fun getItemCount() = comics.size

@@ -12,7 +12,6 @@
         <item name="android:statusBarColor">@color/dk_bg</item>
         <item name="android:navigationBarColor">@color/dk_bg</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:fitsSystemWindows">true</item>
 
         <!-- Ini yang bikin icon vector ikut berubah warna -->
         <item name="colorControlNormal">@color/dk_text</item>
@@ -66,7 +65,8 @@
         <item name="itemIconTint">@drawable/selector_nav_icon</item>
         <item name="itemTextColor">@drawable/selector_nav_text</item>
         <item name="labelVisibilityMode">labeled</item>
-        <item name="elevation">0dp</item>
+        <item name="elevation">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 
     <!-- Input field -->

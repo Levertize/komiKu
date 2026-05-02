@@ -1,6 +1,7 @@
 package com.kelompok1.komiku
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -51,7 +52,10 @@ class JelajahiFragment : Fragment() {
 
     private fun setupRecyclerView() {
         listAdapter = ComicListAdapter(filteredComics) { comic ->
-            // TODO: navigate ke detail comic
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
+            }
+            startActivity(intent)
         }
         binding.rvExploreResults.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -178,7 +182,12 @@ class JelajahiFragment : Fragment() {
             if (isDesc) sorted else sorted.reversed()
         }.toMutableList()
 
-        listAdapter = ComicListAdapter(filteredComics) {}
+        listAdapter = ComicListAdapter(filteredComics) { comic ->
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
+            }
+            startActivity(intent)
+        }
         binding.rvExploreResults.adapter = listAdapter
         updateResultCount()
     }

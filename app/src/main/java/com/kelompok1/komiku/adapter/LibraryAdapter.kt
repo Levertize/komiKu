@@ -12,14 +12,14 @@ import com.kelompok1.komiku.data.DummyData
 
 class LibraryAdapter(
     private val items: List<DummyData.LibraryComic>,
-    private val onClick: (DummyData.LibraryComic) -> Unit = {}
+    private val onClick: (DummyData.LibraryComic) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val vThumb: View = view.findViewById(R.id.iv_lib_thumb)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.tv_lib_title)
+        val tvProgress: TextView = view.findViewById(R.id.tv_lib_chapter)
         val progressBar: ProgressBar = view.findViewById(R.id.pb_lib_progress)
-        val tvChapter: TextView = view.findViewById(R.id.tv_lib_chapter)
+        val ivThumb: View = view.findViewById(R.id.iv_lib_thumb)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,18 +30,16 @@ class LibraryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        val dp = holder.itemView.resources.displayMetrics.density
+        holder.tvTitle.text = item.comic.title
+        holder.tvProgress.text = item.progressText
+        holder.progressBar.progress = item.progress
 
-        // Cover gradient sebagai background
-        val gradient = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
+        val gd = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(item.comic.coverColorStart, item.comic.coverColorEnd)
         )
-        holder.vThumb.background = gradient
-
-        holder.tvTitle.text = item.comic.title
-        holder.progressBar.progress = item.progress
-        holder.tvChapter.text = item.progressText
+        gd.cornerRadius = 14 * holder.itemView.resources.displayMetrics.density
+        holder.ivThumb.background = gd
 
         holder.itemView.setOnClickListener { onClick(item) }
     }
