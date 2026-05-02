@@ -35,7 +35,48 @@ class LibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupSearch()
+        setupFilter()
         updateCount()
+    }
+
+    private fun setupFilter() {
+        var filterVisible = false
+        binding.btnLibFilter.setOnClickListener {
+            filterVisible = !filterVisible
+            binding.panelLibFilter.visibility = if (filterVisible) View.VISIBLE else View.GONE
+            binding.rvLibrary.visibility = if (filterVisible) View.GONE else View.VISIBLE
+        }
+
+        binding.btnApplyLibFilter.setOnClickListener {
+            val checkedId = binding.chipGroupLibSort.checkedChipId
+            val sortType = when (checkedId) {
+                binding.chipGroupLibSort.getChildAt(1).id -> "Progress"
+                binding.chipGroupLibSort.getChildAt(2).id -> "A-Z"
+                binding.chipGroupLibSort.getChildAt(3).id -> "Rating"
+                else -> "Newest"
+            }
+            applyLibSort(sortType)
+            binding.panelLibFilter.visibility = View.GONE
+            binding.rvLibrary.visibility = View.VISIBLE
+            filterVisible = false
+        }
+
+        binding.btnResetLibFilter.setOnClickListener {
+            binding.chipGroupLibSort.check(binding.chipGroupLibSort.getChildAt(0).id)
+            applyLibSort("Newest")
+        }
+    }
+
+    private fun applyLibSort(type: String) {
+        val sortedList = when (type) {
+            "Progress" -> allItems.sortedByDescending { it.progress }
+            "A-Z" -> allItems.sortedBy { it.comic.title }
+            "Rating" -> allItems.sortedByDescending { it.comic.rating }
+            else -> allItems // Dummy newest
+        }
+        filteredItems.clear()
+        filteredItems.addAll(sortedList)
+        libraryAdapter.notifyDataSetChanged()
     }
 
     private fun setupRecyclerView() {
