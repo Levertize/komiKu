@@ -15,11 +15,13 @@ class SplashActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val isLoggedIn = prefs.getBoolean("is_logged_in", true)
-            val intent = if (isLoggedIn) {
-                Intent(this, MainActivity::class.java)
-            } else {
-                Intent(this, LoginActivity::class.java)
+            val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+            val isAdmin = prefs.getBoolean("is_admin", false)
+            
+            val intent = when {
+                isLoggedIn && isAdmin -> Intent(this, com.kelompok1.komiku.admin.AdminActivity::class.java)
+                isLoggedIn -> Intent(this, MainActivity::class.java)
+                else -> Intent(this, LoginActivity::class.java)
             }
             startActivity(intent)
             finish()

@@ -1,6 +1,7 @@
 package com.kelompok1.komiku
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,19 @@ class PengaturanFragment : Fragment() {
                 android.R.anim.fade_in,
                 android.R.anim.fade_out
             )
+        }
+
+        // Tombol Logout
+        binding.rowLogout.setOnClickListener {
+            prefs.edit()
+                .putBoolean("is_logged_in", false)
+                .putBoolean("is_admin", false)
+                .apply()
+            
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            requireActivity().finish()
         }
     }
 

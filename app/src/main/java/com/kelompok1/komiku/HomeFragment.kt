@@ -75,7 +75,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBanner(banners: List<Comic>) {
-        binding.vpBanner.adapter = BannerAdapter(banners)
+        binding.vpBanner.adapter = BannerAdapter(banners) { comic ->
+            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
+            }
+            startActivity(intent)
+        }
         binding.vpBanner.offscreenPageLimit = 1
 
         // Animasi Page Transformer

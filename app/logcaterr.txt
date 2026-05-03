@@ -1,0 +1,81 @@
+--------- beginning of system
+2026-05-03 15:13:31.523  9970-9970  vold                    pid-9970                             E  access /data/media/0/Android/obb/com.kelompok1.komiku/ failed with 2
+--------- beginning of main
+2026-05-03 15:13:32.515  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  Using CollectorTypeCMC GC.
+2026-05-03 15:13:32.537  9996-9996  nativeloader            com.kelompok1.komiku                 D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2026-05-03 15:13:32.574  9996-9996  CompatChangeReporter    com.kelompok1.komiku                 D  Compat change id reported: 242716250; UID 10283; state: ENABLED
+2026-05-03 15:13:32.854  9996-9996  nativeloader            com.kelompok1.komiku                 D  Configuring clns-7 for other apk /data/app/~~Pws0RTonhpuPPmCdETEH6g==/com.kelompok1.komiku-m4q6D2okHkeJArXYsDZFrg==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~Pws0RTonhpuPPmCdETEH6g==/com.kelompok1.komiku-m4q6D2okHkeJArXYsDZFrg==/lib/arm64, permitted_path=/data:/mnt/expand:/data/user/0/com.kelompok1.komiku
+2026-05-03 15:13:32.873  9996-9996  GraphicsEnvironment     com.kelompok1.komiku                 V  Currently set values for:
+2026-05-03 15:13:32.873  9996-9996  GraphicsEnvironment     com.kelompok1.komiku                 V    angle_gl_driver_selection_pkgs=[]
+2026-05-03 15:13:32.874  9996-9996  GraphicsEnvironment     com.kelompok1.komiku                 V    angle_gl_driver_selection_values=[]
+2026-05-03 15:13:32.874  9996-9996  GraphicsEnvironment     com.kelompok1.komiku                 V  Global.Settings values are invalid: number of packages: 0, number of values: 0
+2026-05-03 15:13:32.874  9996-9996  GraphicsEnvironment     com.kelompok1.komiku                 V  Neither updatable production driver nor prerelease driver is supported.
+2026-05-03 15:13:32.935  9996-9996  nativeloader            com.kelompok1.komiku                 D  Load libunipnp_jni.so using system ns (caller=/system_ext/framework/unipnp-framework.jar): ok
+2026-05-03 15:13:33.039  9996-9996  RenderThread            com.kelompok1.komiku                 W  type=1400 audit(0.0:9971): avc:  denied  { read } for  name="large_page_conf" dev="sysfs" ino=55969 scontext=u:r:untrusted_app:s0:c27,c257,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=com.kelompok1.komiku
+2026-05-03 15:13:33.076  9996-9996  AppCompatDelegate       com.kelompok1.komiku                 D  Checking for metadata for AppLocalesMetadataHolderService : Service not found
+2026-05-03 15:13:33.175  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  hiddenapi: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (runtime_flags=0, domain=platform, api=unsupported) from Landroidx/appcompat/widget/ViewUtils; (domain=app, TargetSdkVersion=34) using reflection: allowed
+2026-05-03 15:13:33.270  9996-9996  HWUI                    com.kelompok1.komiku                 W  Unknown dataspace 0
+2026-05-03 15:13:33.384  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  hook_module_init libgui_unisoc_utils.so over, map size:3, library handle:0x27e16b583cb5262d
+2026-05-03 15:13:33.384  9996-9996  UnisocBufferQueueHelper com.kelompok1.komiku                 I  Unisoc-Graphics: UnisocBufferQueueHelper create, this:0xb400007001c76840, size:88
+2026-05-03 15:13:33.384  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  createUnisocBufferQueueHelperFactory success, get instance 0xb400007001c76840
+2026-05-03 15:13:33.385  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  Unisoc-Graphics: UnisocFrameRecord create, this:0xb400006ff8c5c480, size:296, enable:0
+2026-05-03 15:13:33.385  9996-9996  elompok1.komiku         com.kelompok1.komiku                 I  createUnisocFrameRecordFactory success, get instance 0xb400006ff8c5c480
+2026-05-03 15:13:33.416  9996-10196 mali_gralloc            com.kelompok1.komiku                 D  register: id=257000021cb, handle=0xb400006ff8ba8d60, importpid=9996
+2026-05-03 15:13:33.416  9996-10196 libc                    com.kelompok1.komiku                 W  Access denied finding property "persist.vendor.gpu.ionmemtrack"
+2026-05-03 15:13:33.417  9996-10196 mali_gralloc            com.kelompok1.komiku                 I  initIonKernelMemtrack open devices:/dev/systemheap success, fd:167
+2026-05-03 15:13:33.419  9996-10196 mali_gralloc            com.kelompok1.komiku                 D  register: id=257000021cc, handle=0xb400007001cb8b60, importpid=9996
+2026-05-03 15:13:33.421  9996-10196 mali_gralloc            com.kelompok1.komiku                 D  register: id=257000021cd, handle=0xb400007001cb8d20, importpid=9996
+2026-05-03 15:13:33.423  9996-10196 mali_gralloc            com.kelompok1.komiku                 D  register: id=257000021ce, handle=0xb400007001cb8e00, importpid=9996
+--------- beginning of crash
+2026-05-03 15:13:33.669  9996-9996  AndroidRuntime          com.kelompok1.komiku                 E  FATAL EXCEPTION: main (Fix with AI)
+                                                                                                    Process: com.kelompok1.komiku, PID: 9996
+                                                                                                    java.lang.IllegalStateException: Room cannot verify the data integrity. Looks like you've changed schema but forgot to update the version number. You can simply fix this by increasing the version number. Expected identity hash: 5d6c298ae778090a108aae7b6ae7c6df, found: 9e42075834784db4ce114b51cf94e281
+                                                                                                    	at androidx.room.RoomOpenHelper.checkIdentity(RoomOpenHelper.kt:146)
+                                                                                                    	at androidx.room.RoomOpenHelper.onOpen(RoomOpenHelper.kt:127)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.onOpen(FrameworkSQLiteOpenHelper.kt:287)
+                                                                                                    	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:426)
+                                                                                                    	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:316)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getWritableOrReadableDatabase(FrameworkSQLiteOpenHelper.kt:232)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.innerGetDatabase(FrameworkSQLiteOpenHelper.kt:190)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getSupportDatabase(FrameworkSQLiteOpenHelper.kt:151)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper.getWritableDatabase(FrameworkSQLiteOpenHelper.kt:104)
+                                                                                                    	at androidx.room.RoomDatabase.inTransaction(RoomDatabase.kt:632)
+                                                                                                    	at androidx.room.RoomDatabase.assertNotSuspendingTransaction(RoomDatabase.kt:451)
+                                                                                                    	at androidx.room.RoomDatabase.query(RoomDatabase.kt:480)
+                                                                                                    	at androidx.room.util.DBUtil.query(DBUtil.kt:75)
+                                                                                                    	at com.kelompok1.komiku.database.ComicDao_Impl$12.call(ComicDao_Impl.java:333)
+                                                                                                    	at com.kelompok1.komiku.database.ComicDao_Impl$12.call(ComicDao_Impl.java:329)
+                                                                                                    	at androidx.room.CoroutinesRoom$Companion$execute$4$job$1.invokeSuspend(CoroutinesRoom.kt:87)
+                                                                                                    	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+                                                                                                    	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+                                                                                                    	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1154)
+                                                                                                    	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+                                                                                                    	at java.lang.Thread.run(Thread.java:1564)
+                                                                                                    	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@a3141c2, Dispatchers.Main]
+2026-05-03 15:13:33.670  9996-9996  MQS                     com.kelompok1.komiku                 I  Found JavaCrash event
+2026-05-03 15:13:33.675  9996-9996  ScoutUtils              com.kelompok1.komiku                 W  Failed to mkdir /data/miuilog/stability/hprof/
+2026-05-03 15:13:33.756  3196-3221  JavaExceptionHandler    com.miui.daemon                      E  Process: com.kelompok1.komiku, PID: 9996 (Fix with AI)
+                                                                                                    java.lang.IllegalStateException: Room cannot verify the data integrity. Looks like you've changed schema but forgot to update the version number. You can simply fix this by increasing the version number. Expected identity hash: 5d6c298ae778090a108aae7b6ae7c6df, found: 9e42075834784db4ce114b51cf94e281
+                                                                                                    	at androidx.room.RoomOpenHelper.checkIdentity(RoomOpenHelper.kt:146)
+                                                                                                    	at androidx.room.RoomOpenHelper.onOpen(RoomOpenHelper.kt:127)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.onOpen(FrameworkSQLiteOpenHelper.kt:287)
+                                                                                                    	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:426)
+                                                                                                    	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java:316)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getWritableOrReadableDatabase(FrameworkSQLiteOpenHelper.kt:232)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.innerGetDatabase(FrameworkSQLiteOpenHelper.kt:190)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getSupportDatabase(FrameworkSQLiteOpenHelper.kt:151)
+                                                                                                    	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper.getWritableDatabase(FrameworkSQLiteOpenHelper.kt:104)
+                                                                                                    	at androidx.room.RoomDatabase.inTransaction(RoomDatabase.kt:632)
+                                                                                                    	at androidx.room.RoomDatabase.assertNotSuspendingTransaction(RoomDatabase.kt:451)
+                                                                                                    	at androidx.room.RoomDatabase.query(RoomDatabase.kt:480)
+                                                                                                    	at androidx.room.util.DBUtil.query(DBUtil.kt:75)
+                                                                                                    	at com.kelompok1.komiku.database.ComicDao_Impl$12.call(ComicDao_Impl.java:333)
+                                                                                                    	at com.kelompok1.komiku.database.ComicDao_Impl$12.call(ComicDao_Impl.java:329)
+                                                                                                    	at androidx.room.CoroutinesRoom$Companion$execute$4$job$1.invokeSuspend(CoroutinesRoom.kt:87)
+                                                                                                    	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+                                                                                                    	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+                                                                                                    	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1154)
+                                                                                                    	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+                                                                                                    	at java.lang.Thread.run(Thread.java:1564)
+                                                                                                    	Suppressed: kotlinx.coroutines.internal.DiagnosticCoroutineContextException: [StandaloneCoroutine{Cancelling}@a3141c2, Dispatchers.Main]
+2026-05-03 15:13:33.827  9996-9996  Process                 com.kelompok1.komiku                 I  Sending signal. PID: 9996 SIG: 9

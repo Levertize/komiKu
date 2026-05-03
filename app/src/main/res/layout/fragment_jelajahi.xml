@@ -412,6 +412,11 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+        <include
+            android:id="@+id/layout_empty"
+            layout="@layout/layout_empty_state"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

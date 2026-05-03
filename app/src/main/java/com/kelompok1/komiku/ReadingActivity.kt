@@ -2,6 +2,7 @@ package com.kelompok1.komiku
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -10,7 +11,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kelompok1.komiku.adapter.ReadingPageAdapter
-import com.kelompok1.komiku.data.DummyData
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityReadingBinding
 import com.kelompok1.komiku.model.Chapter
@@ -73,9 +73,9 @@ class ReadingActivity : AppCompatActivity() {
         binding.tvReadComicTitle.text = comicTitle
         binding.tvReadChapter.text = chapterTitle
 
-        val pages = DummyData.getDummyPages(chapterId)
         binding.rvPages.layoutManager = LinearLayoutManager(this)
-        binding.rvPages.adapter = ReadingPageAdapter(pages)
+        
+        loadChapterData(chapterId)
 
         binding.rvPages.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
@@ -95,6 +95,27 @@ class ReadingActivity : AppCompatActivity() {
 
         binding.btnReadBack.setOnClickListener { finish() }
         setupChapterNav(comicId, chapterId)
+    }
+
+    private fun loadChapterData(chapterId: Int) {
+        lifecycleScope.launch {
+            val chapter = chapterRepository.getChapterById(chapterId)
+            if (chapter != null) {
+                if (chapter.imagePaths.isEmpty()) {
+                    // Fallback to unified dummy pages if no real images
+                    val dummyPages = listOf(
+                        "dummy_color_#1A1A2E",
+                        "dummy_color_#7C5CFC",
+                        "dummy_color_#C084FC",
+                        "dummy_color_#13131F",
+                        "dummy_color_#0D0D14"
+                    )
+                    binding.rvPages.adapter = ReadingPageAdapter(dummyPages)
+                } else {
+                    binding.rvPages.adapter = ReadingPageAdapter(chapter.imagePaths)
+                }
+            }
+        }
     }
 
     private fun setupChapterNav(comicId: Int, currentChapterId: Int) {

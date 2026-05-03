@@ -5,23 +5,28 @@
     android:layout_height="wrap_content"
     android:background="@color/read_bg">
 
-    <!-- Simulasi halaman komik (gradient placeholder) -->
-    <View
-        android:id="@+id/page_bg"
+    <!-- Comic Page Image -->
+    <ImageView
+        android:id="@+id/iv_reading_page"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:background="@color/dk_card2" />
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:minHeight="400dp" />
 
-    <!-- Nomor halaman -->
+    <!-- Page Number Overlay -->
     <TextView
         android:id="@+id/tv_page_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
-        android:textSize="8sp"
+        android:textSize="10sp"
         android:textStyle="bold"
         android:letterSpacing="0.06"
-        android:textColor="#26FFFFFF" />
+        android:textColor="#40FFFFFF"
+        android:background="#20000000"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp" />
 
 </FrameLayout>

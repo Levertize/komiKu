@@ -4,14 +4,15 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kelompok1.komiku.R
 import com.kelompok1.komiku.model.Comic
 
-class BannerAdapter(private val banners: List<Comic>) :
-    RecyclerView.Adapter<BannerAdapter.ViewHolder>() {
+class BannerAdapter(
+    private val banners: List<Comic>,
+    private val onItemClick: (Comic) -> Unit
+) : RecyclerView.Adapter<BannerAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.tv_banner_title)
@@ -36,6 +37,10 @@ class BannerAdapter(private val banners: List<Comic>) :
         )
         gd.cornerRadius = 18 * holder.itemView.resources.displayMetrics.density
         holder.bannerBg.background = gd
+
+        holder.itemView.setOnClickListener {
+            onItemClick(comic)
+        }
     }
 
     override fun getItemCount() = banners.size

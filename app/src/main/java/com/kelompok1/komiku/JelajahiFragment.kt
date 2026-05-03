@@ -168,28 +168,36 @@ class JelajahiFragment : Fragment() {
     }
 
     private fun applyFilter() {
-        val query = binding.etSearch.text?.toString()?.lowercase() ?: ""
+        val query = binding.etSearch.text?.toString()?.trim()?.lowercase() ?: ""
 
         filteredComics.clear()
         val filtered = allComics.filter { comic ->
+            // Match Query (Search box)
             val matchQuery = query.isEmpty() ||
                     comic.title.lowercase().contains(query) ||
                     comic.author.lowercase().contains(query) ||
                     comic.genre.any { it.lowercase().contains(query) }
 
+            // Match Format (Exact match)
             val matchFormat = selectedFormat.isEmpty() ||
-                    comic.format.equals(selectedFormat, ignoreCase = true)
+                    comic.format.trim().equals(selectedFormat.trim(), ignoreCase = true)
 
+            // Match Genre (Exact match in list)
             val matchGenre = selectedGenre.isEmpty() ||
-                    comic.genre.any { it.equals(selectedGenre, ignoreCase = true) }
+                    comic.genre.any { it.trim().equals(selectedGenre.trim(), ignoreCase = true) }
 
             matchQuery && matchFormat && matchGenre
         }.let { list ->
+            // Handle Sorting
             val sorted = when (selectedSort) {
                 "Rating tertinggi" -> list.sortedByDescending { it.rating }
-                "A → Z" -> list.sortedBy { it.title }
-                "Z → A" -> list.sortedByDescending { it.title }
-                else -> list.sortedByDescending { it.views.replace("M", "").replace(".", "").toFloatOrNull() ?: 0f }
+                "A → Z" -> list.sortedBy { it.title.lowercase() }
+                "Z → A" -> list.sortedByDescending { it.title.lowercase() }
+                "Terakhir diupdate" -> list.sortedByDescending { it.lastUpdate.toLongOrNull() ?: 0L }
+                "Unggahan terbaru" -> list.sortedByDescending { it.createdAt }
+                else -> list.sortedByDescending { 
+                    it.views.replace("M", "").replace("K", "").replace(".", "").replace(",", "").trim().toFloatOrNull() ?: 0f 
+                }
             }
             if (isDesc) sorted else sorted.reversed()
         }
@@ -197,6 +205,15 @@ class JelajahiFragment : Fragment() {
         filteredComics.addAll(filtered)
         listAdapter.notifyDataSetChanged()
         updateResultCount()
+        
+        // Toggle empty state visibility
+        if (filteredComics.isEmpty()) {
+            binding.layoutEmpty.root.visibility = View.VISIBLE
+            binding.rvExploreResults.visibility = View.GONE
+        } else {
+            binding.layoutEmpty.root.visibility = View.GONE
+            binding.rvExploreResults.visibility = View.VISIBLE
+        }
     }
 
     private fun updateResultCount() {

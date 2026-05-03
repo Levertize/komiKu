@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ComicDao {
-    @Query("SELECT * FROM comics ORDER BY created_at DESC")
+    @Query("SELECT * FROM comics ORDER BY last_update DESC, created_at DESC")
     fun getAllComics(): Flow<List<Comic>>
 
     @Query("SELECT * FROM comics WHERE id = :id")

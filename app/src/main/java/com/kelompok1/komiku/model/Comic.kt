@@ -30,7 +30,7 @@ data class Chapter(
     @ColumnInfo(name = "comic_id") val comicId: Int,
     val number: Int,               // nomor chapter, e.g. 97
     val title: String,             // "Chapter 97 - The Final Battle"
-    @ColumnInfo(name = "pdf_path") val pdfPath: String = "",
+    @ColumnInfo(name = "image_paths") val imagePaths: List<String> = emptyList(), // List path gambar
     @ColumnInfo(name = "upload_date") val uploadDate: String
 )
 
@@ -42,14 +42,6 @@ data class Library(
     @ColumnInfo(name = "total_chapter") val totalChapter: Int = 0,
     @ColumnInfo(name = "saved_at") val savedAt: Long = System.currentTimeMillis()
 )
-
-data class LibraryComic(
-    val comic: Comic,
-    val library: Library
-) {
-    val progress: Int get() = if (library.totalChapter > 0) ((library.currentChapter.toFloat() / library.totalChapter) * 100).toInt() else 0
-    val progressText: String get() = "Ch. ${library.currentChapter} / ${library.totalChapter}"
-}
 
 data class LibraryComicJoin(
     @Embedded val comic: Comic,

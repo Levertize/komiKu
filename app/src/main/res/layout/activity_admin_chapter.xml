@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dk_bg"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/chapter_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_admin_comic_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comic Title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/dk_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kelola Chapter &amp; PDF"
+            android:textSize="12sp"
+            android:textColor="@color/dk_muted"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/form_chapter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/chapter_header">
+
+        <EditText
+            android:id="@+id/et_chapter_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Chapter (e.g. 10)"
+            android:inputType="number"
+            android:textColor="@color/dk_text"
+            android:textColorHint="@color/dk_muted" />
+
+        <EditText
+            android:id="@+id/et_chapter_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Judul Chapter (e.g. Chapter 10 - Fight)"
+            android:inputType="text"
+            android:textColor="@color/dk_text"
+            android:textColorHint="@color/dk_muted"
+            android:layout_marginTop="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_select_pdf"
+            style="@style/Widget.KomiKu.Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pilih File PDF"
+            android:layout_marginTop="16dp"
+            app:icon="@drawable/ic_chapter" />
+
+        <TextView
+            android:id="@+id/tv_selected_pdf_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Belum ada PDF terpilih"
+            android:textSize="10sp"
+            android:textColor="@color/dk_hint"
+            android:layout_marginTop="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save_chapter"
+            style="@style/Widget.KomiKu.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Simpan Chapter"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_admin_chapters"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/form_chapter"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
