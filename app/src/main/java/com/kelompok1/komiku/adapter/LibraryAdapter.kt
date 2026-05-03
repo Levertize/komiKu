@@ -8,11 +8,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kelompok1.komiku.R
-import com.kelompok1.komiku.data.DummyData
+import com.kelompok1.komiku.model.LibraryComicJoin
 
 class LibraryAdapter(
-    private val items: List<DummyData.LibraryComic>,
-    private val onClick: (DummyData.LibraryComic) -> Unit
+    private val items: List<LibraryComicJoin>,
+    private val onClick: (LibraryComicJoin) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,14 +31,21 @@ class LibraryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.tvTitle.text = item.comic.title
-        holder.tvProgress.text = item.progressText
-        holder.progressBar.progress = item.progress
+        
+        // Calculate progress
+        val progress = if (item.library.totalChapter > 0) 
+            ((item.library.currentChapter.toFloat() / item.library.totalChapter) * 100).toInt() 
+            else 0
+        val progressText = "Ch. ${item.library.currentChapter} / ${item.library.totalChapter}"
+        
+        holder.tvProgress.text = progressText
+        holder.progressBar.progress = progress
 
         val gd = GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(item.comic.coverColorStart, item.comic.coverColorEnd)
         )
-        gd.cornerRadius = 14 * holder.itemView.resources.displayMetrics.density
+        gd.cornerRadius = 18 * holder.itemView.resources.displayMetrics.density
         holder.ivThumb.background = gd
 
         holder.itemView.setOnClickListener { onClick(item) }

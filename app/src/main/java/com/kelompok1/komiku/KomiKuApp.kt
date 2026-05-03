@@ -3,10 +3,18 @@ package com.kelompok1.komiku
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.kelompok1.komiku.database.DatabaseSeeder
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class KomiKuApp : Application() {
     override fun onCreate() {
         super.onCreate()
+
+        // Seed database
+        MainScope().launch {
+            DatabaseSeeder.seedDatabase(this@KomiKuApp)
+        }
 
         // Terapkan mode yang tersimpan setiap kali app dibuka
         val prefs = getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)

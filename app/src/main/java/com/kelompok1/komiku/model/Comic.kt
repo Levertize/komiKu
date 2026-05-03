@@ -1,27 +1,57 @@
 package com.kelompok1.komiku.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "comics")
 data class Comic(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val author: String,
-    val chapter: String,           // chapter terbaru, e.g. "Ch. 1111"
     val format: String,            // Manga / Manhwa / Manhua / Webtoon
-    val genre: List<String>,
-    val badge: String,             // "HOT", "NEW", "UPDATE", ""
-    val rating: Float,
-    val views: String,             // "12.4M"
-    val lastUpdate: String,        // "2 jam lalu"
-    val coverColorStart: Int,
-    val coverColorEnd: Int,
+    val genre: List<String>,       // Using TypeConverter
     val description: String = "",  // sinopsis
-    val status: String = "Ongoing" // Ongoing / Completed
+    val status: String = "Ongoing", // Ongoing / Completed
+    val rating: Float = 0f,
+    val views: String = "0",
+    val badge: String = "",        // "HOT", "NEW", "UPDATE", ""
+    @ColumnInfo(name = "cover_color_start") val coverColorStart: Int,
+    @ColumnInfo(name = "cover_color_end") val coverColorEnd: Int,
+    @ColumnInfo(name = "last_update") val lastUpdate: String = "",
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
+    val chapter: String = ""       // chapter terbaru (redundant but kept for UI compatibility for now)
 )
 
+@Entity(tableName = "chapters")
 data class Chapter(
-    val id: Int,
-    val comicId: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "comic_id") val comicId: Int,
     val number: Int,               // nomor chapter, e.g. 97
     val title: String,             // "Chapter 97 - The Final Battle"
-    val uploadDate: String,        // "2 hari lalu"
-    val pages: List<String> = emptyList() // list URL gambar (dummy pakai warna)
+    @ColumnInfo(name = "pdf_path") val pdfPath: String = "",
+    @ColumnInfo(name = "upload_date") val uploadDate: String
+)
+
+@Entity(tableName = "library")
+data class Library(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "comic_id") val comicId: Int,
+    @ColumnInfo(name = "current_chapter") val currentChapter: Int = 0,
+    @ColumnInfo(name = "total_chapter") val totalChapter: Int = 0,
+    @ColumnInfo(name = "saved_at") val savedAt: Long = System.currentTimeMillis()
+)
+
+data class LibraryComic(
+    val comic: Comic,
+    val library: Library
+) {
+    val progress: Int get() = if (library.totalChapter > 0) ((library.currentChapter.toFloat() / library.totalChapter) * 100).toInt() else 0
+    val progressText: String get() = "Ch. ${library.currentChapter} / ${library.totalChapter}"
+}
+
+data class LibraryComicJoin(
+    @Embedded val comic: Comic,
+    @Embedded(prefix = "lib_") val library: Library
 )

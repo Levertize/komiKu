@@ -1,6 +1,5 @@
 package com.kelompok1.komiku
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,20 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kelompok1.komiku.adapter.ComicListAdapter
-
-import com.kelompok1.komiku.data.DummyData
+import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.FragmentJelajahiBinding
 import com.kelompok1.komiku.model.Comic
+import com.kelompok1.komiku.repository.ComicRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class JelajahiFragment : Fragment() {
 
     private var _binding: FragmentJelajahiBinding? = null
     private val binding get() = _binding!!
 
-    private var allComics = DummyData.exploreComics.toMutableList()
-    private var filteredComics = allComics.toMutableList()
+    private lateinit var comicRepository: ComicRepository
+    private var allComics = mutableListOf<Comic>()
+    private var filteredComics = mutableListOf<Comic>()
     private lateinit var listAdapter: ComicListAdapter
 
     // State filter
@@ -43,11 +46,24 @@ class JelajahiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val database = KomiKuDatabase.getDatabase(requireContext())
+        comicRepository = ComicRepository(database.comicDao())
+
         setupRecyclerView()
         setupSearch()
         setupFilterButton()
         setupSortToggle()
-        updateResultCount()
+        observeComics()
+    }
+
+    private fun observeComics() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            comicRepository.getAllComics().collectLatest { comics ->
+                allComics.clear()
+                allComics.addAll(comics)
+                applyFilter()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -67,7 +83,6 @@ class JelajahiFragment : Fragment() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 applyFilter()
-                // Tampilkan tombol clear kalau ada teks
                 binding.btnClearSearch.visibility =
                     if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
             }
@@ -95,7 +110,6 @@ class JelajahiFragment : Fragment() {
         }
 
         binding.btnApplyFilter.setOnClickListener {
-            // Ambil format yang dipilih
             val checkedFormat = binding.chipGroupFormat.checkedChipId
             selectedFormat = when (checkedFormat) {
                 View.NO_ID -> ""
@@ -105,14 +119,12 @@ class JelajahiFragment : Fragment() {
                 }
             }
 
-            // Ambil genre yang dipilih
             val checkedGenre = binding.chipGroupGenre.checkedChipIds
             selectedGenre = if (checkedGenre.isEmpty()) "" else {
                 val chip = binding.chipGroupGenre.findViewById<com.google.android.material.chip.Chip>(checkedGenre.first())
                 chip?.text?.toString() ?: ""
             }
 
-            // Ambil sort
             val checkedSort = binding.chipGroupSort.checkedChipId
             if (checkedSort != View.NO_ID) {
                 val chip = binding.chipGroupSort.findViewById<com.google.android.material.chip.Chip>(checkedSort)
@@ -158,7 +170,8 @@ class JelajahiFragment : Fragment() {
     private fun applyFilter() {
         val query = binding.etSearch.text?.toString()?.lowercase() ?: ""
 
-        filteredComics = allComics.filter { comic ->
+        filteredComics.clear()
+        val filtered = allComics.filter { comic ->
             val matchQuery = query.isEmpty() ||
                     comic.title.lowercase().contains(query) ||
                     comic.author.lowercase().contains(query) ||
@@ -172,7 +185,6 @@ class JelajahiFragment : Fragment() {
 
             matchQuery && matchFormat && matchGenre
         }.let { list ->
-            // Sorting
             val sorted = when (selectedSort) {
                 "Rating tertinggi" -> list.sortedByDescending { it.rating }
                 "A → Z" -> list.sortedBy { it.title }
@@ -180,15 +192,10 @@ class JelajahiFragment : Fragment() {
                 else -> list.sortedByDescending { it.views.replace("M", "").replace(".", "").toFloatOrNull() ?: 0f }
             }
             if (isDesc) sorted else sorted.reversed()
-        }.toMutableList()
-
-        listAdapter = ComicListAdapter(filteredComics) { comic ->
-            val intent = Intent(requireContext(), DetailActivity::class.java).apply {
-                putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
-            }
-            startActivity(intent)
         }
-        binding.rvExploreResults.adapter = listAdapter
+        
+        filteredComics.addAll(filtered)
+        listAdapter.notifyDataSetChanged()
         updateResultCount()
     }
 

@@ -10,12 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.kelompok1.komiku.adapter.BannerAdapter
 import com.kelompok1.komiku.adapter.ComicGridAdapter
-import com.kelompok1.komiku.data.DummyData
+import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.FragmentHomeBinding
+import com.kelompok1.komiku.model.Comic
+import com.kelompok1.komiku.repository.ComicRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -23,6 +28,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val autoScrollHandler = Handler(Looper.getMainLooper())
     private var autoScrollRunnable: Runnable? = null
+    
+    private lateinit var comicRepository: ComicRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,10 +42,24 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        val database = KomiKuDatabase.getDatabase(requireContext())
+        comicRepository = ComicRepository(database.comicDao())
+        
         fixAvatarCircle()
-        setupBanner()
-        setupPopularGrid()
-        setupOthersGrid()
+        observeComics()
+    }
+
+    private fun observeComics() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            comicRepository.getAllComics().collectLatest { comics ->
+                if (comics.isNotEmpty()) {
+                    setupBanner(comics.take(3))
+                    setupPopularGrid(comics.take(6))
+                    setupOthersGrid(comics.drop(6))
+                }
+            }
+        }
     }
 
     private fun fixAvatarCircle() {
@@ -53,8 +74,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupBanner() {
-        val banners = DummyData.bannerComics
+    private fun setupBanner(banners: List<Comic>) {
         binding.vpBanner.adapter = BannerAdapter(banners)
         binding.vpBanner.offscreenPageLimit = 1
 
@@ -138,9 +158,9 @@ class HomeFragment : Fragment() {
         autoScrollHandler.postDelayed(autoScrollRunnable!!, 3000)
     }
 
-    private fun setupPopularGrid() {
+    private fun setupPopularGrid(comics: List<Comic>) {
         binding.rvPopular.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvPopular.adapter = ComicGridAdapter(DummyData.popularComics) { comic ->
+        binding.rvPopular.adapter = ComicGridAdapter(comics) { comic ->
             val intent = Intent(requireContext(), DetailActivity::class.java).apply {
                 putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
             }
@@ -149,9 +169,9 @@ class HomeFragment : Fragment() {
         binding.rvPopular.isNestedScrollingEnabled = false
     }
 
-    private fun setupOthersGrid() {
+    private fun setupOthersGrid(comics: List<Comic>) {
         binding.rvOthers.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvOthers.adapter = ComicGridAdapter(DummyData.otherComics) { comic ->
+        binding.rvOthers.adapter = ComicGridAdapter(comics) { comic ->
             val intent = Intent(requireContext(), DetailActivity::class.java).apply {
                 putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
             }
@@ -167,7 +187,10 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        startAutoScroll(DummyData.bannerComics.size)
+        // vpBanner might not be initialized yet if database is empty
+        if (binding.vpBanner.adapter != null && (binding.vpBanner.adapter?.itemCount ?: 0) > 0) {
+            startAutoScroll(binding.vpBanner.adapter!!.itemCount)
+        }
     }
 
     override fun onDestroyView() {

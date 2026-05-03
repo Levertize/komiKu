@@ -8,18 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kelompok1.komiku.adapter.LibraryAdapter
-import com.kelompok1.komiku.data.DummyData
+import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.FragmentLibraryBinding
+import com.kelompok1.komiku.model.LibraryComicJoin
+import com.kelompok1.komiku.repository.ComicRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class LibraryFragment : Fragment() {
 
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
-    private val allItems = DummyData.libraryComics.toMutableList()
-    private var filteredItems = allItems.toMutableList()
+    private lateinit var comicRepository: ComicRepository
+    private var allItems = mutableListOf<LibraryComicJoin>()
+    private var filteredItems = mutableListOf<LibraryComicJoin>()
     private lateinit var libraryAdapter: LibraryAdapter
 
     override fun onCreateView(
@@ -33,10 +39,67 @@ class LibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        val database = KomiKuDatabase.getDatabase(requireContext())
+        comicRepository = ComicRepository(database.comicDao())
+        
         setupRecyclerView()
         setupSearch()
         setupFilter()
-        updateCount()
+        observeLibrary()
+    }
+
+    private fun observeLibrary() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            comicRepository.getLibraryComics().collectLatest { items ->
+                allItems.clear()
+                allItems.addAll(items)
+                applySearch(binding.etLibrarySearch.text?.toString() ?: "")
+                updateCount()
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        libraryAdapter = LibraryAdapter(filteredItems) { item ->
+            val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
+                putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
+                putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.library.currentChapter}")
+                putExtra(ReadingActivity.EXTRA_CHAPTER_ID, 1) // Dummy ID
+                putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
+            }
+            startActivity(intent)
+        }
+        binding.rvLibrary.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = libraryAdapter
+        }
+        updateEmptyState()
+    }
+
+    private fun setupSearch() {
+        binding.etLibrarySearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                applySearch(s?.toString() ?: "")
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun applySearch(query: String) {
+        val q = query.lowercase()
+        val filtered = if (q.isEmpty()) {
+            allItems
+        } else {
+            allItems.filter {
+                it.comic.title.lowercase().contains(q)
+            }
+        }
+        filteredItems.clear()
+        filteredItems.addAll(filtered)
+        libraryAdapter.notifyDataSetChanged()
+        updateEmptyState()
     }
 
     private fun setupFilter() {
@@ -69,60 +132,18 @@ class LibraryFragment : Fragment() {
 
     private fun applyLibSort(type: String) {
         val sortedList = when (type) {
-            "Progress" -> allItems.sortedByDescending { it.progress }
+            "Progress" -> {
+                allItems.sortedByDescending { 
+                    if (it.library.totalChapter > 0) it.library.currentChapter.toFloat() / it.library.totalChapter else 0f
+                }
+            }
             "A-Z" -> allItems.sortedBy { it.comic.title }
             "Rating" -> allItems.sortedByDescending { it.comic.rating }
-            else -> allItems // Dummy newest
+            else -> allItems // Default: saved_at DESC (handled by DAO)
         }
         filteredItems.clear()
         filteredItems.addAll(sortedList)
         libraryAdapter.notifyDataSetChanged()
-    }
-
-    private fun setupRecyclerView() {
-        libraryAdapter = LibraryAdapter(filteredItems) { item ->
-            val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
-                putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
-                putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.currentChapter}")
-                putExtra(ReadingActivity.EXTRA_CHAPTER_ID, item.currentChapter)
-                putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
-            }
-            startActivity(intent)
-        }
-        binding.rvLibrary.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = libraryAdapter
-        }
-        updateEmptyState()
-    }
-
-    private fun setupSearch() {
-        binding.etLibrarySearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val query = s?.toString()?.lowercase() ?: ""
-                filteredItems = if (query.isEmpty()) {
-                    allItems.toMutableList()
-                } else {
-                    allItems.filter {
-                        it.comic.title.lowercase().contains(query)
-                    }.toMutableList()
-                }
-                libraryAdapter = LibraryAdapter(filteredItems) { item ->
-                    val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
-                        putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
-                        putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.currentChapter}")
-                        putExtra(ReadingActivity.EXTRA_CHAPTER_ID, item.currentChapter)
-                        putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
-                    }
-                    startActivity(intent)
-                }
-                binding.rvLibrary.adapter = libraryAdapter
-                updateEmptyState()
-                updateCount()
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
     }
 
     private fun updateCount() {

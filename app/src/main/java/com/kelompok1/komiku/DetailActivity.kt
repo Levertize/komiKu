@@ -3,21 +3,30 @@ package com.kelompok1.komiku
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
-import com.kelompok1.komiku.R
 import com.kelompok1.komiku.adapter.ChapterAdapter
-import com.kelompok1.komiku.data.DummyData
+import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityDetailBinding
 import com.kelompok1.komiku.model.Chapter
 import com.kelompok1.komiku.model.Comic
+import com.kelompok1.komiku.model.Library
+import com.kelompok1.komiku.repository.ChapterRepository
+import com.kelompok1.komiku.repository.ComicRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
     private var isDescExpanded = false
+    
+    private lateinit var comicRepository: ComicRepository
+    private lateinit var chapterRepository: ChapterRepository
+    private var currentComic: Comic? = null
+    private var isBookmarked = false
 
     companion object {
         const val EXTRA_COMIC_ID = "comic_id"
@@ -28,16 +37,72 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val comicId = intent.getIntExtra(EXTRA_COMIC_ID, 1)
-        val comic = DummyData.getComicById(comicId) ?: return
-        val chapters = DummyData.getChaptersByComicId(comicId)
+        val database = KomiKuDatabase.getDatabase(this)
+        comicRepository = ComicRepository(database.comicDao())
+        chapterRepository = ChapterRepository(database.chapterDao())
 
-        setupCover(comic)
-        setupInfo(comic)
-        setupGenreChips(comic)
-        setupDescription(comic)
-        setupButtons(comic, chapters)
-        setupChapterList(chapters)
+        val comicId = intent.getIntExtra(EXTRA_COMIC_ID, 1)
+        
+        loadComicData(comicId)
+        
+        binding.btnDetailBack.setOnClickListener { finish() }
+    }
+
+    private fun loadComicData(comicId: Int) {
+        lifecycleScope.launch {
+            val comic = comicRepository.getComicById(comicId)
+            if (comic != null) {
+                currentComic = comic
+                setupCover(comic)
+                setupInfo(comic)
+                setupGenreChips(comic)
+                setupDescription(comic)
+                checkBookmarkStatus(comicId)
+                
+                chapterRepository.getChaptersByComicId(comicId).collectLatest { chapters ->
+                    setupChapterList(comic, chapters)
+                    setupReadButton(comic, chapters)
+                }
+            }
+        }
+    }
+
+    private fun checkBookmarkStatus(comicId: Int) {
+        lifecycleScope.launch {
+            val entry = comicRepository.getLibraryEntry(comicId)
+            isBookmarked = entry != null
+            updateBookmarkIcon()
+            
+            binding.btnBookmarkDetail.setOnClickListener {
+                toggleBookmark(comicId)
+            }
+        }
+    }
+
+    private fun toggleBookmark(comicId: Int) {
+        lifecycleScope.launch {
+            if (isBookmarked) {
+                val entry = comicRepository.getLibraryEntry(comicId)
+                if (entry != null) {
+                    comicRepository.removeFromLibrary(entry)
+                    isBookmarked = false
+                }
+            } else {
+                comicRepository.addToLibrary(Library(comicId = comicId))
+                isBookmarked = true
+            }
+            updateBookmarkIcon()
+        }
+    }
+
+    private fun updateBookmarkIcon() {
+        if (isBookmarked) {
+            binding.btnBookmarkDetail.setIconResource(R.drawable.ic_bookmark)
+            binding.btnBookmarkDetail.setIconTintResource(R.color.accent)
+        } else {
+            binding.btnBookmarkDetail.setIconResource(R.drawable.ic_bookmark)
+            binding.btnBookmarkDetail.setIconTintResource(R.color.dk_muted)
+        }
     }
 
     private fun setupCover(comic: Comic) {
@@ -54,9 +119,7 @@ class DetailActivity : AppCompatActivity() {
         binding.tvDetailRating.text = comic.rating.toString()
         binding.tvDetailFormat.text = comic.format
         binding.tvStatViews.text = comic.views
-        binding.tvStatChapters.text = DummyData.getChaptersByComicId(comic.id).size.toString()
         binding.tvStatStatus.text = comic.status
-        binding.tvChapterCount.text = "${DummyData.getChaptersByComicId(comic.id).size} chapter"
     }
 
     private fun setupGenreChips(comic: Comic) {
@@ -90,30 +153,17 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupButtons(comic: Comic, chapters: List<Chapter>) {
-        // Tombol Mulai Baca → buka chapter pertama (terbaru)
+    private fun setupReadButton(comic: Comic, chapters: List<Chapter>) {
         binding.btnStartRead.setOnClickListener {
             if (chapters.isNotEmpty()) {
-                openReading(comic, chapters.first())
+                openReading(comic, chapters.last()) // Start from first chapter (last in sorted list)
             }
-        }
-
-        // Tombol bookmark
-        binding.btnBookmarkDetail.setOnClickListener {
-            // TODO: simpan ke library
-            binding.btnBookmarkDetail.setIconResource(R.drawable.ic_bookmark)
-        }
-
-        // Tombol back
-        binding.btnDetailBack.setOnClickListener {
-            finish()
         }
     }
 
-    private fun setupChapterList(chapters: List<Chapter>) {
-        val comic = DummyData.getComicById(
-            intent.getIntExtra(EXTRA_COMIC_ID, 1)
-        ) ?: return
+    private fun setupChapterList(comic: Comic, chapters: List<Chapter>) {
+        binding.tvStatChapters.text = chapters.size.toString()
+        binding.tvChapterCount.text = "${chapters.size} chapter"
 
         binding.rvChapters.layoutManager = LinearLayoutManager(this)
         binding.rvChapters.adapter = ChapterAdapter(chapters) { chapter ->
