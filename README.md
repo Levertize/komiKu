@@ -9,7 +9,7 @@
 
 Dibangun sebagai tugas kuliah **Pemrograman Aplikasi Mobile** oleh:
 *   **Mohamad Dimas Arjuna** — 2403040058
-*   **Iqbal Dwi Ganjar** — 2403040029
+*   **Iqbal Dwi Ganjar Saefullah** — 2403040029
 
 ---
 
