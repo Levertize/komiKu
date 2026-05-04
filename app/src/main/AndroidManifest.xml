@@ -28,6 +28,7 @@
         <activity android:name=".DetailActivity" />
         <activity android:name=".admin.AdminActivity" />
         <activity android:name=".admin.AdminChapterActivity" />
+        <activity android:name=".admin.AdminComicActivity" />
         <activity
             android:name=".ReadingActivity"
             android:theme="@style/Theme.KomiKu.Reading" />

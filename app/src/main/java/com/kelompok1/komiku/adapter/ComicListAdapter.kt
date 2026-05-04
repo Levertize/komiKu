@@ -4,13 +4,17 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.kelompok1.komiku.R
 import com.kelompok1.komiku.model.Comic
+import java.io.File
 
 class ComicListAdapter(
     private val comics: List<Comic>,
+    private val onBookmarkClick: ((Comic) -> Unit)? = null,
     private val onItemClick: (Comic) -> Unit
 ) : RecyclerView.Adapter<ComicListAdapter.ViewHolder>() {
 
@@ -19,10 +23,11 @@ class ComicListAdapter(
         val tvAuthor: TextView = view.findViewById(R.id.tv_list_author)
         val tvRating: TextView = view.findViewById(R.id.tv_rating)
         val tvBadge: TextView = view.findViewById(R.id.tv_list_badge)
-        val ivThumb: View = view.findViewById(R.id.iv_list_thumb)
+        val ivThumb: ImageView = view.findViewById(R.id.iv_list_thumb)
         val tvViews: TextView = view.findViewById(R.id.tv_views)
         val tvChapters: TextView = view.findViewById(R.id.tv_chapters)
         val tvUpdateTime: TextView = view.findViewById(R.id.tv_update_time)
+        val btnBookmark: View = view.findViewById(R.id.btn_list_bookmark)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,15 +43,21 @@ class ComicListAdapter(
         holder.tvRating.text = comic.rating.toString()
         holder.tvViews.text = comic.views
         holder.tvChapters.text = comic.chapter
-        holder.tvUpdateTime.text = comic.lastUpdate
+        holder.tvUpdateTime.text = formatTime(comic.lastUpdate)
 
-        // Cover gradient
-        val gd = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(comic.coverColorStart, comic.coverColorEnd)
-        )
-        gd.cornerRadius = 8 * holder.itemView.resources.displayMetrics.density
-        holder.ivThumb.background = gd
+        // Cover handling: Prefer image path, fallback to gradient
+        if (!comic.coverPath.isNullOrEmpty()) {
+            val file = File(comic.coverPath)
+            if (file.exists()) {
+                Glide.with(holder.itemView.context)
+                    .load(file)
+                    .into(holder.ivThumb)
+            } else {
+                setGradientCover(holder, comic)
+            }
+        } else {
+            setGradientCover(holder, comic)
+        }
 
         // Badge
         if (comic.badge.isNotEmpty()) {
@@ -61,7 +72,34 @@ class ComicListAdapter(
             holder.tvBadge.visibility = View.GONE
         }
 
+        holder.btnBookmark.setOnClickListener {
+            onBookmarkClick?.invoke(comic)
+        }
+
         holder.itemView.setOnClickListener { onItemClick(comic) }
+    }
+
+    private fun setGradientCover(holder: ViewHolder, comic: Comic) {
+        val gd = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(comic.coverColorStart, comic.coverColorEnd)
+        )
+        gd.cornerRadius = 8 * holder.itemView.resources.displayMetrics.density
+        holder.ivThumb.setImageDrawable(gd)
+    }
+
+    private fun formatTime(timestampStr: String): String {
+        val timestamp = timestampStr.toLongOrNull() ?: return timestampStr
+        val now = System.currentTimeMillis()
+        val diff = now - timestamp
+        
+        return when {
+            diff < 60 * 1000 -> "Baru saja"
+            diff < 60 * 60 * 1000 -> "${diff / (60 * 1000)} menit lalu"
+            diff < 24 * 60 * 60 * 1000 -> "${diff / (60 * 60 * 1000)} jam lalu"
+            diff < 7 * 24 * 60 * 60 * 1000 -> "${diff / (24 * 60 * 60 * 1000)} hari lalu"
+            else -> "1 minggu lalu"
+        }
     }
 
     override fun getItemCount() = comics.size

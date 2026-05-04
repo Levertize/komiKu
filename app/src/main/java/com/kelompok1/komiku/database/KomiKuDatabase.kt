@@ -6,7 +6,7 @@ import com.kelompok1.komiku.model.Chapter
 import com.kelompok1.komiku.model.Comic
 import com.kelompok1.komiku.model.Library
 
-@Database(entities = [Comic::class, Chapter::class, Library::class], version = 2, exportSchema = false)
+@Database(entities = [Comic::class, Chapter::class, Library::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class KomiKuDatabase : RoomDatabase() {
     abstract fun comicDao(): ComicDao

@@ -14,8 +14,10 @@ import com.kelompok1.komiku.adapter.LibraryAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.FragmentLibraryBinding
 import com.kelompok1.komiku.model.LibraryComicJoin
+import com.kelompok1.komiku.repository.ChapterRepository
 import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LibraryFragment : Fragment() {
@@ -24,6 +26,7 @@ class LibraryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var comicRepository: ComicRepository
+    private lateinit var chapterRepository: ChapterRepository
     private var allItems = mutableListOf<LibraryComicJoin>()
     private var filteredItems = mutableListOf<LibraryComicJoin>()
     private lateinit var libraryAdapter: LibraryAdapter
@@ -42,6 +45,7 @@ class LibraryFragment : Fragment() {
         
         val database = KomiKuDatabase.getDatabase(requireContext())
         comicRepository = ComicRepository(database.comicDao())
+        chapterRepository = ChapterRepository(database.chapterDao())
         
         setupRecyclerView()
         setupSearch()
@@ -62,13 +66,27 @@ class LibraryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         libraryAdapter = LibraryAdapter(filteredItems) { item ->
-            val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
-                putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
-                putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${item.library.currentChapter}")
-                putExtra(ReadingActivity.EXTRA_CHAPTER_ID, 1) // Dummy ID
-                putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val chapters = chapterRepository.getChaptersByComicId(item.comic.id).first()
+                if (chapters.isNotEmpty()) {
+                    // Try to find the chapter matching current progress, otherwise take the first available
+                    val targetChapter = chapters.find { it.number == item.library.currentChapter } ?: chapters.last()
+                    
+                    val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
+                        putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
+                        putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, targetChapter.title)
+                        putExtra(ReadingActivity.EXTRA_CHAPTER_ID, targetChapter.id)
+                        putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
+                    }
+                    startActivity(intent)
+                } else {
+                    // Fallback to detail if no chapters found
+                    val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                        putExtra(DetailActivity.EXTRA_COMIC_ID, item.comic.id)
+                    }
+                    startActivity(intent)
+                }
             }
-            startActivity(intent)
         }
         binding.rvLibrary.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)

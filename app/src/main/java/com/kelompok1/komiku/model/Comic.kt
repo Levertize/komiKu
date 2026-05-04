@@ -21,7 +21,8 @@ data class Comic(
     @ColumnInfo(name = "cover_color_end") val coverColorEnd: Int,
     @ColumnInfo(name = "last_update") val lastUpdate: String = "",
     @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
-    val chapter: String = ""       // chapter terbaru (redundant but kept for UI compatibility for now)
+    val chapter: String = "",       // chapter terbaru (redundant but kept for UI compatibility for now)
+    @ColumnInfo(name = "cover_path") val coverPath: String? = null // Path ke file gambar cover di internal storage
 )
 
 @Entity(tableName = "chapters")

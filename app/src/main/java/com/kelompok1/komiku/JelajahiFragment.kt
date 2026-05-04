@@ -16,7 +16,9 @@ import com.kelompok1.komiku.databinding.FragmentJelajahiBinding
 import com.kelompok1.komiku.model.Comic
 import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import android.widget.Toast
 
 class JelajahiFragment : Fragment() {
 
@@ -62,12 +64,15 @@ class JelajahiFragment : Fragment() {
                 allComics.clear()
                 allComics.addAll(comics)
                 applyFilter()
+                updateActiveChips()
             }
         }
     }
 
     private fun setupRecyclerView() {
-        listAdapter = ComicListAdapter(filteredComics) { comic ->
+        listAdapter = ComicListAdapter(filteredComics, onBookmarkClick = { comic ->
+            toggleBookmark(comic)
+        }) { comic ->
             val intent = Intent(requireContext(), DetailActivity::class.java).apply {
                 putExtra(DetailActivity.EXTRA_COMIC_ID, comic.id)
             }
@@ -76,6 +81,23 @@ class JelajahiFragment : Fragment() {
         binding.rvExploreResults.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = listAdapter
+        }
+    }
+
+    private fun toggleBookmark(comic: Comic) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val entry = comicRepository.getLibraryEntry(comic.id)
+            if (entry != null) {
+                comicRepository.removeFromLibrary(entry)
+                android.widget.Toast.makeText(requireContext(), "${comic.title} dihapus dari Library", android.widget.Toast.LENGTH_SHORT).show()
+            } else {
+                val chapters = KomiKuDatabase.getDatabase(requireContext()).chapterDao().getChaptersByComicId(comic.id).first()
+                comicRepository.addToLibrary(com.kelompok1.komiku.model.Library(
+                    comicId = comic.id,
+                    totalChapter = chapters.size
+                ))
+                android.widget.Toast.makeText(requireContext(), "${comic.title} disimpan ke Library", android.widget.Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -109,6 +131,10 @@ class JelajahiFragment : Fragment() {
             }
         }
 
+        binding.btnCloseFilter.setOnClickListener {
+            binding.btnFilter.performClick()
+        }
+
         binding.btnApplyFilter.setOnClickListener {
             val checkedFormat = binding.chipGroupFormat.checkedChipId
             selectedFormat = when (checkedFormat) {
@@ -132,6 +158,7 @@ class JelajahiFragment : Fragment() {
             }
 
             applyFilter()
+            updateActiveChips()
             binding.panelFilter.visibility = View.GONE
             binding.layoutResults.visibility = View.VISIBLE
             filterVisible = false
@@ -140,10 +167,73 @@ class JelajahiFragment : Fragment() {
         binding.btnResetFilter.setOnClickListener {
             selectedFormat = ""
             selectedGenre = ""
-            selectedSort = "Terpopuler"
+            selectedSort = getString(R.string.sort_popular)
             binding.chipGroupFormat.clearCheck()
             binding.chipGroupGenre.clearCheck()
+            // Reset sort chip to default
+            for (i in 0 until binding.chipGroupSort.childCount) {
+                val chip = binding.chipGroupSort.getChildAt(i) as? com.google.android.material.chip.Chip
+                if (chip?.text == getString(R.string.sort_popular)) {
+                    chip.isChecked = true
+                    break
+                }
+            }
             applyFilter()
+            updateActiveChips()
+        }
+    }
+
+    private fun updateActiveChips() {
+        binding.chipGroupActive.removeAllViews()
+
+        if (selectedFormat.isNotEmpty()) {
+            addActiveChip(selectedFormat)
+        }
+        if (selectedGenre.isNotEmpty()) {
+            addActiveChip(selectedGenre)
+        }
+        if (selectedSort != getString(R.string.sort_popular)) {
+            addActiveChip(selectedSort)
+        }
+    }
+
+    private fun addActiveChip(text: String) {
+        val chip = com.google.android.material.chip.Chip(requireContext())
+        chip.text = text
+        chip.isCloseIconVisible = true
+        chip.setChipBackgroundColorResource(R.color.dk_card2)
+        chip.setTextColor(android.content.res.ColorStateList.valueOf(0xFFF0EEF8.toInt()))
+        chip.setCloseIconTintResource(R.color.accent)
+        chip.chipStrokeWidth = 0f
+        chip.textSize = 10f
+        
+        chip.setOnCloseIconClickListener {
+            if (text == selectedFormat) selectedFormat = ""
+            else if (text == selectedGenre) selectedGenre = ""
+            else if (text == selectedSort) selectedSort = getString(R.string.sort_popular)
+            
+            applyFilter()
+            updateActiveChips()
+            // Sync with filter panel
+            syncFilterPanel()
+        }
+        binding.chipGroupActive.addView(chip)
+    }
+
+    private fun syncFilterPanel() {
+        // Sync format
+        if (selectedFormat.isEmpty()) binding.chipGroupFormat.clearCheck()
+        // Sync genre
+        if (selectedGenre.isEmpty()) binding.chipGroupGenre.clearCheck()
+        // Sync sort
+        if (selectedSort == getString(R.string.sort_popular)) {
+            for (i in 0 until binding.chipGroupSort.childCount) {
+                val chip = binding.chipGroupSort.getChildAt(i) as? com.google.android.material.chip.Chip
+                if (chip?.text == getString(R.string.sort_popular)) {
+                    chip.isChecked = true
+                    break
+                }
+            }
         }
     }
 
@@ -190,13 +280,18 @@ class JelajahiFragment : Fragment() {
         }.let { list ->
             // Handle Sorting
             val sorted = when (selectedSort) {
-                "Rating tertinggi" -> list.sortedByDescending { it.rating }
-                "A → Z" -> list.sortedBy { it.title.lowercase() }
-                "Z → A" -> list.sortedByDescending { it.title.lowercase() }
-                "Terakhir diupdate" -> list.sortedByDescending { it.lastUpdate.toLongOrNull() ?: 0L }
-                "Unggahan terbaru" -> list.sortedByDescending { it.createdAt }
+                getString(R.string.sort_rating) -> list.sortedByDescending { it.rating }
+                getString(R.string.sort_az) -> list.sortedBy { it.title.lowercase() }
+                getString(R.string.sort_za) -> list.sortedByDescending { it.title.lowercase() }
+                getString(R.string.sort_latest) -> list.sortedByDescending { it.lastUpdate.toLongOrNull() ?: 0L }
                 else -> list.sortedByDescending { 
-                    it.views.replace("M", "").replace("K", "").replace(".", "").replace(",", "").trim().toFloatOrNull() ?: 0f 
+                    val raw = it.views.uppercase()
+                    var multiplier = 1f
+                    if (raw.endsWith("M")) multiplier = 1_000_000f
+                    else if (raw.endsWith("K")) multiplier = 1_000f
+                    
+                    val value = raw.replace("M", "").replace("K", "").replace(",", ".").trim().toFloatOrNull() ?: 0f
+                    value * multiplier
                 }
             }
             if (isDesc) sorted else sorted.reversed()

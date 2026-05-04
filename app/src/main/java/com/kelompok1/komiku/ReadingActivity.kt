@@ -14,9 +14,11 @@ import com.kelompok1.komiku.adapter.ReadingPageAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityReadingBinding
 import com.kelompok1.komiku.model.Chapter
+import com.kelompok1.komiku.model.Library
 import com.kelompok1.komiku.repository.ChapterRepository
 import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ReadingActivity : AppCompatActivity() {
@@ -76,6 +78,7 @@ class ReadingActivity : AppCompatActivity() {
         binding.rvPages.layoutManager = LinearLayoutManager(this)
         
         loadChapterData(chapterId)
+        updateReadingHistory(comicId, chapterId)
 
         binding.rvPages.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
@@ -151,6 +154,33 @@ class ReadingActivity : AppCompatActivity() {
             }
             finish()
             startActivity(intent)
+        }
+    }
+
+    private fun updateReadingHistory(comicId: Int, chapterId: Int) {
+        lifecycleScope.launch {
+            val chapter = chapterRepository.getChapterById(chapterId) ?: return@launch
+            val allChapters = chapterRepository.getChaptersByComicId(comicId).first()
+            val totalChapters = allChapters.size
+
+            val existingEntry = comicRepository.getLibraryEntry(comicId)
+            if (existingEntry != null) {
+                val updatedEntry = existingEntry.copy(
+                    currentChapter = chapter.number,
+                    totalChapter = totalChapters,
+                    savedAt = System.currentTimeMillis()
+                )
+                comicRepository.addToLibrary(updatedEntry)
+            } else {
+                // If not in library, we still want it to show up in "Last Read" which is effectively the library view
+                val newEntry = Library(
+                    comicId = comicId,
+                    currentChapter = chapter.number,
+                    totalChapter = totalChapters,
+                    savedAt = System.currentTimeMillis()
+                )
+                comicRepository.addToLibrary(newEntry)
+            }
         }
     }
 }

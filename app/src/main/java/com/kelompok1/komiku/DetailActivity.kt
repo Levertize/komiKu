@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.kelompok1.komiku.adapter.ChapterAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
@@ -16,7 +17,9 @@ import com.kelompok1.komiku.model.Library
 import com.kelompok1.komiku.repository.ChapterRepository
 import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.File
 
 class DetailActivity : AppCompatActivity() {
 
@@ -88,7 +91,11 @@ class DetailActivity : AppCompatActivity() {
                     isBookmarked = false
                 }
             } else {
-                comicRepository.addToLibrary(Library(comicId = comicId))
+                val chapters = chapterRepository.getChaptersByComicId(comicId).first()
+                comicRepository.addToLibrary(Library(
+                    comicId = comicId,
+                    totalChapter = chapters.size
+                ))
                 isBookmarked = true
             }
             updateBookmarkIcon()
@@ -106,11 +113,26 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setupCover(comic: Comic) {
+        if (!comic.coverPath.isNullOrEmpty()) {
+            val file = File(comic.coverPath)
+            if (file.exists()) {
+                Glide.with(this).load(file).into(binding.ivDetailCover)
+                // Also set gradient for the background overlay
+                val gradient = GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    intArrayOf(comic.coverColorStart, comic.coverColorEnd)
+                )
+                binding.viewCoverBg.background = gradient
+                return
+            }
+        }
+        
         val gradient = GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(comic.coverColorStart, comic.coverColorEnd)
         )
         binding.viewCoverBg.background = gradient
+        binding.ivDetailCover.setImageDrawable(null)
     }
 
     private fun setupInfo(comic: Comic) {

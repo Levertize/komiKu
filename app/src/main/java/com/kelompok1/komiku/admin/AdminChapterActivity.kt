@@ -4,12 +4,14 @@ import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kelompok1.komiku.adapter.ChapterAdapter
+import com.kelompok1.komiku.adapter.ChapterPreviewAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityAdminChapterBinding
 import com.kelompok1.komiku.model.Chapter
@@ -32,6 +34,11 @@ class AdminChapterActivity : AppCompatActivity() {
             selectedImages.clear()
             selectedImages.addAll(uris)
             binding.tvSelectedPdfPath.text = "${uris.size} gambar terpilih"
+            
+            // Show preview
+            binding.rvImagePreview.visibility = View.VISIBLE
+            binding.rvImagePreview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.rvImagePreview.adapter = ChapterPreviewAdapter(selectedImages)
         }
     }
 
@@ -55,6 +62,8 @@ class AdminChapterActivity : AppCompatActivity() {
         setupRecyclerView()
         observeChapters()
 
+        binding.btnAdminChapterBack.setOnClickListener { finish() }
+
         binding.btnSelectPdf.apply {
             text = "Pilih Gambar Chapter"
             setOnClickListener {
@@ -75,7 +84,14 @@ class AdminChapterActivity : AppCompatActivity() {
         lifecycleScope.launch {
             chapterRepository.getChaptersByComicId(comicId).collectLatest { chapters ->
                 binding.rvAdminChapters.adapter = ChapterAdapter(chapters) { chapter ->
-                    // Edit/Delete chapter logic can be added here
+                    // Admin can preview the chapter content
+                    val intent = Intent(this@AdminChapterActivity, com.kelompok1.komiku.ReadingActivity::class.java).apply {
+                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_TITLE, binding.tvAdminComicTitle.text.toString())
+                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${chapter.number}")
+                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_ID, chapter.id)
+                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_ID, chapter.comicId)
+                    }
+                    startActivity(intent)
                 }
             }
         }
@@ -146,6 +162,7 @@ class AdminChapterActivity : AppCompatActivity() {
         binding.etChapterNumber.setText("")
         binding.etChapterTitle.setText("")
         binding.tvSelectedPdfPath.text = "Belum ada gambar terpilih"
+        binding.rvImagePreview.visibility = View.GONE
         selectedImages.clear()
     }
 }

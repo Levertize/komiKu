@@ -3,6 +3,7 @@ package com.kelompok1.komiku.admin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,6 @@ class AdminActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var comicRepository: ComicRepository
-    private lateinit var adapter: ComicListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,45 +46,68 @@ class AdminActivity : AppCompatActivity() {
             finish()
         }
         
-        // FAB click opens Chapter management for now (simplified for this task)
         binding.fabAddComic.setOnClickListener {
-            // Simplified: we'll just allow adding chapters to existing comics for now
+            val intent = Intent(this, AdminComicActivity::class.java)
+            startActivity(intent)
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = ComicListAdapter(mutableListOf()) { comic ->
-            val intent = Intent(this, AdminChapterActivity::class.java).apply {
-                putExtra("comic_id", comic.id)
-                putExtra("comic_title", comic.title)
-            }
-            startActivity(intent)
-        }
         binding.rvAdminComics.layoutManager = LinearLayoutManager(this)
-        binding.rvAdminComics.adapter = adapter
     }
 
     private fun observeComics() {
         lifecycleScope.launch {
             comicRepository.getAllComics().collectLatest { comics ->
-                // Note: ComicListAdapter needs an update to accept dynamic list updates
-                // For now, recreating adapter or adding a method to it
-                (binding.rvAdminComics.adapter as? ComicListAdapter)?.let {
-                    // This is a bit of a hack since ComicListAdapter takes List, not MutableList
-                    setupRecyclerViewWithData(comics)
+                val adapter = ComicListAdapter(comics, onBookmarkClick = null) { comic ->
+                    // Admin behavior: show options (Manage Chapters or Edit Comic)
+                    showAdminOptions(comic)
                 }
+                binding.rvAdminComics.adapter = adapter
             }
         }
     }
 
-    private fun setupRecyclerViewWithData(comics: List<Comic>) {
-        adapter = ComicListAdapter(comics) { comic ->
-            val intent = Intent(this, AdminChapterActivity::class.java).apply {
-                putExtra("comic_id", comic.id)
-                putExtra("comic_title", comic.title)
+    private fun showAdminOptions(comic: Comic) {
+        val options = arrayOf("Kelola Chapter", "Edit Detail Komik", "Hapus Komik")
+        android.app.AlertDialog.Builder(this)
+            .setTitle(comic.title)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> { // Manage Chapters
+                        val intent = Intent(this, AdminChapterActivity::class.java).apply {
+                            putExtra("comic_id", comic.id)
+                            putExtra("comic_title", comic.title)
+                        }
+                        startActivity(intent)
+                    }
+                    1 -> { // Edit Comic
+                        val intent = Intent(this, AdminComicActivity::class.java).apply {
+                            putExtra("comic_id", comic.id)
+                        }
+                        startActivity(intent)
+                    }
+                    2 -> { // Delete Comic
+                        confirmDelete(comic)
+                    }
+                }
             }
-            startActivity(intent)
-        }
-        binding.rvAdminComics.adapter = adapter
+            .show()
+    }
+
+    private fun confirmDelete(comic: Comic) {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Hapus Komik")
+            .setMessage("Apakah Anda yakin ingin menghapus '${comic.title}' beserta semua chapternya?")
+            .setPositiveButton("Hapus") { _, _ ->
+                lifecycleScope.launch {
+                    val database = KomiKuDatabase.getDatabase(this@AdminActivity)
+                    database.chapterDao().deleteChaptersByComicId(comic.id)
+                    database.comicDao().deleteComic(comic)
+                    Toast.makeText(this@AdminActivity, "Komik berhasil dihapus", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
     }
 }

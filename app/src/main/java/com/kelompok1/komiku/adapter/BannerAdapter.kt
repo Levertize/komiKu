@@ -4,10 +4,13 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.kelompok1.komiku.R
 import com.kelompok1.komiku.model.Comic
+import java.io.File
 
 class BannerAdapter(
     private val banners: List<Comic>,
@@ -17,7 +20,7 @@ class BannerAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.tv_banner_title)
         val tvMeta: TextView = view.findViewById(R.id.tv_banner_meta)
-        val bannerBg: View = view.findViewById(R.id.banner_bg)
+        val bannerBg: ImageView = view.findViewById(R.id.banner_bg)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,16 +34,32 @@ class BannerAdapter(
         holder.tvTitle.text = comic.title
         holder.tvMeta.text = "oleh ${comic.author} · ${comic.genre.joinToString(", ")}"
 
+        // Banner handling
+        if (!comic.coverPath.isNullOrEmpty()) {
+            val file = File(comic.coverPath)
+            if (file.exists()) {
+                Glide.with(holder.itemView.context)
+                    .load(file)
+                    .into(holder.bannerBg)
+            } else {
+                setGradientBanner(holder, comic)
+            }
+        } else {
+            setGradientBanner(holder, comic)
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick(comic)
+        }
+    }
+
+    private fun setGradientBanner(holder: ViewHolder, comic: Comic) {
         val gd = GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(comic.coverColorStart, comic.coverColorEnd)
         )
         gd.cornerRadius = 18 * holder.itemView.resources.displayMetrics.density
-        holder.bannerBg.background = gd
-
-        holder.itemView.setOnClickListener {
-            onItemClick(comic)
-        }
+        holder.bannerBg.setImageDrawable(gd)
     }
 
     override fun getItemCount() = banners.size

@@ -23,13 +23,22 @@
             <!-- ── HERO COVER + BACK BUTTON ── -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp">
+                android:layout_height="320dp">
 
                 <!-- Cover gradient background -->
+                <ImageView
+                    android:id="@+id/iv_detail_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Cover Image" />
+
+                <!-- Cover gradient background fallback/overlay -->
                 <View
                     android:id="@+id/view_cover_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:alpha="0.4" />
 
                 <!-- Overlay gelap di bawah -->
                 <View
