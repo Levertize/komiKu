@@ -10,16 +10,20 @@ android {
     }
 
     namespace = "com.kelompok1.komiku"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.kelompok1.komiku"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+        }
     }
 
     buildTypes {
@@ -29,6 +33,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
     compileOptions {
@@ -63,6 +76,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.gson)
+
+    // PDF Reader (Version v3.2.0-beta06 supports 16 KB page size for Android 15+)
+    implementation("com.github.asadwaheed1:AndroidPdfViewer:v3.2.0-beta06")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

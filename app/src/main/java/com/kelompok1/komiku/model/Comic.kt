@@ -31,7 +31,7 @@ data class Chapter(
     @ColumnInfo(name = "comic_id") val comicId: Int,
     val number: Int,               // nomor chapter, e.g. 97
     val title: String,             // "Chapter 97 - The Final Battle"
-    @ColumnInfo(name = "image_paths") val imagePaths: List<String> = emptyList(), // List path gambar
+    @ColumnInfo(name = "pdf_path") val pdfPath: String? = null, // Path file PDF
     @ColumnInfo(name = "upload_date") val uploadDate: String
 )
 

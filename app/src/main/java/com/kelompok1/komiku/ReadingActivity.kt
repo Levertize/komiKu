@@ -3,14 +3,13 @@ package com.kelompok1.komiku
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.kelompok1.komiku.adapter.ReadingPageAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityReadingBinding
 import com.kelompok1.komiku.model.Chapter
@@ -20,6 +19,7 @@ import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.File
 
 class ReadingActivity : AppCompatActivity() {
 
@@ -74,48 +74,35 @@ class ReadingActivity : AppCompatActivity() {
 
         binding.tvReadComicTitle.text = comicTitle
         binding.tvReadChapter.text = chapterTitle
-
-        binding.rvPages.layoutManager = LinearLayoutManager(this)
         
         loadChapterData(chapterId)
         updateReadingHistory(comicId, chapterId)
 
-        binding.rvPages.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-                val offset = recyclerView.computeVerticalScrollOffset()
-                val extent = recyclerView.computeVerticalScrollExtent()
-                val range = recyclerView.computeVerticalScrollRange()
-
-                if (range > extent) {
-                    val totalHeight = recyclerView.height - binding.readTopbar.height - binding.readBottombar.height
-                    val thumbHeight = binding.scrollThumb.height
-                    val scrollRange = totalHeight - thumbHeight
-                    val percentage = offset.toFloat() / (range - extent)
-                    binding.scrollThumb.translationY = (binding.readTopbar.height + (percentage * scrollRange))
-                }
-            }
-        })
-
         binding.btnReadBack.setOnClickListener { finish() }
         setupChapterNav(comicId, chapterId)
+
+        // Hide custom scroll thumb as PDFView has its own or we might not need it
+        binding.scrollThumb.visibility = View.GONE
     }
 
     private fun loadChapterData(chapterId: Int) {
         lifecycleScope.launch {
             val chapter = chapterRepository.getChapterById(chapterId)
             if (chapter != null) {
-                if (chapter.imagePaths.isEmpty()) {
-                    // Fallback to unified dummy pages if no real images
-                    val dummyPages = listOf(
-                        "dummy_color_#1A1A2E",
-                        "dummy_color_#7C5CFC",
-                        "dummy_color_#C084FC",
-                        "dummy_color_#13131F",
-                        "dummy_color_#0D0D14"
-                    )
-                    binding.rvPages.adapter = ReadingPageAdapter(dummyPages)
+                if (chapter.pdfPath != null) {
+                    val file = File(chapter.pdfPath)
+                    if (file.exists()) {
+                        binding.pdfView.fromFile(file)
+                            .enableSwipe(true)
+                            .swipeHorizontal(false)
+                            .enableDoubletap(true)
+                            .defaultPage(0)
+                            .load()
+                    } else {
+                        Toast.makeText(this@ReadingActivity, "File PDF tidak ditemukan", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    binding.rvPages.adapter = ReadingPageAdapter(chapter.imagePaths)
+                    Toast.makeText(this@ReadingActivity, "Chapter ini belum memiliki file PDF", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -172,7 +159,6 @@ class ReadingActivity : AppCompatActivity() {
                 )
                 comicRepository.addToLibrary(updatedEntry)
             } else {
-                // If not in library, we still want it to show up in "Last Read" which is effectively the library view
                 val newEntry = Library(
                     comicId = comicId,
                     currentChapter = chapter.number,

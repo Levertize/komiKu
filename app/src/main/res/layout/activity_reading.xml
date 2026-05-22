@@ -6,14 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/read_bg">
 
-    <!-- ── PAGES RECYCLERVIEW ── -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_pages"
+    <!-- ── PDF VIEWER ── -->
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_height="match_parent" />
 
     <!-- ── TOP BAR ── -->
     <LinearLayout

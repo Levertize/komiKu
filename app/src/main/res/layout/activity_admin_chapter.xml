@@ -88,24 +88,15 @@
             style="@style/Widget.KomiKu.Button.Outline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pilih Gambar Chapter"
+            android:text="@string/btn_select_pdf"
             android:layout_marginTop="16dp"
             app:icon="@drawable/ic_chapter" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_image_preview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <TextView
             android:id="@+id/tv_selected_pdf_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Belum ada PDF terpilih"
+            android:text="@string/no_pdf_selected"
             android:textSize="10sp"
             android:textColor="@color/dk_hint"
             android:layout_marginTop="4dp" />

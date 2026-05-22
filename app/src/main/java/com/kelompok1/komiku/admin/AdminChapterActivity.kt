@@ -1,17 +1,15 @@
 package com.kelompok1.komiku.admin
 
-import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kelompok1.komiku.R
 import com.kelompok1.komiku.adapter.ChapterAdapter
-import com.kelompok1.komiku.adapter.ChapterPreviewAdapter
 import com.kelompok1.komiku.database.KomiKuDatabase
 import com.kelompok1.komiku.databinding.ActivityAdminChapterBinding
 import com.kelompok1.komiku.model.Chapter
@@ -26,24 +24,18 @@ class AdminChapterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminChapterBinding
     private lateinit var chapterRepository: ChapterRepository
     private var comicId: Int = 0
-    private var selectedImages = mutableListOf<Uri>()
+    private var selectedPdfUri: Uri? = null
 
-    // Launcher for selecting multiple images
-    private val selectImagesLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-        if (uriListNotEmpty(uris)) {
-            selectedImages.clear()
-            selectedImages.addAll(uris)
-            binding.tvSelectedPdfPath.text = "${uris.size} gambar terpilih"
-            
-            // Show preview
-            binding.rvImagePreview.visibility = View.VISIBLE
-            binding.rvImagePreview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            binding.rvImagePreview.adapter = ChapterPreviewAdapter(selectedImages)
+    // Launcher for selecting a single PDF file
+    private val selectPdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            selectedPdfUri = uri
+            binding.tvSelectedPdfPath.text = "File terpilih: ${getFileName(uri)}"
         }
     }
 
-    private fun uriListNotEmpty(uris: List<Uri>?): Boolean {
-        return uris != null && uris.isNotEmpty()
+    private fun getFileName(uri: Uri): String {
+        return uri.path?.substringAfterLast('/') ?: "file_pdf"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,11 +56,8 @@ class AdminChapterActivity : AppCompatActivity() {
 
         binding.btnAdminChapterBack.setOnClickListener { finish() }
 
-        binding.btnSelectPdf.apply {
-            text = "Pilih Gambar Chapter"
-            setOnClickListener {
-                selectImagesLauncher.launch("image/*")
-            }
+        binding.btnSelectPdf.setOnClickListener {
+            selectPdfLauncher.launch("application/pdf")
         }
 
         binding.btnSaveChapter.setOnClickListener {
@@ -84,7 +73,6 @@ class AdminChapterActivity : AppCompatActivity() {
         lifecycleScope.launch {
             chapterRepository.getChaptersByComicId(comicId).collectLatest { chapters ->
                 binding.rvAdminChapters.adapter = ChapterAdapter(chapters) { chapter ->
-                    // Admin can preview the chapter content
                     val intent = Intent(this@AdminChapterActivity, com.kelompok1.komiku.ReadingActivity::class.java).apply {
                         putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_TITLE, binding.tvAdminComicTitle.text.toString())
                         putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${chapter.number}")
@@ -98,22 +86,24 @@ class AdminChapterActivity : AppCompatActivity() {
     }
 
     private fun saveChapter() {
-        val number = binding.etChapterNumber.text.toString().toIntOrNull()
+        val numberString = binding.etChapterNumber.text.toString()
         val title = binding.etChapterTitle.text.toString()
 
-        if (number == null || title.isEmpty() || selectedImages.isEmpty()) {
-            Toast.makeText(this, "Mohon lengkapi semua data", Toast.LENGTH_SHORT).show()
+        if (numberString.isEmpty() || title.isEmpty() || selectedPdfUri == null) {
+            Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             return
         }
 
+        val number = numberString.toIntOrNull() ?: return
+
         lifecycleScope.launch {
-            val imagePaths = copyImagesToInternalStorage(selectedImages, comicId, number)
-            if (imagePaths.isNotEmpty()) {
+            val pdfPath = copyPdfToInternalStorage(selectedPdfUri!!, comicId, number)
+            if (pdfPath != null) {
                 val newChapter = Chapter(
                     comicId = comicId,
                     number = number,
                     title = title,
-                    imagePaths = imagePaths,
+                    pdfPath = pdfPath,
                     uploadDate = "baru saja"
                 )
                 
@@ -127,42 +117,38 @@ class AdminChapterActivity : AppCompatActivity() {
                     database.comicDao().updateComic(updatedComic)
                 }
                 
-                Toast.makeText(this@AdminChapterActivity, "Chapter berhasil disimpan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AdminChapterActivity, getString(R.string.chapter_saved), Toast.LENGTH_SHORT).show()
                 clearForm()
             } else {
-                Toast.makeText(this@AdminChapterActivity, "Gagal menyalin gambar", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AdminChapterActivity, getString(R.string.copy_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun copyImagesToInternalStorage(uris: List<Uri>, comicId: Int, chapterNumber: Int): List<String> {
-        val savedPaths = mutableListOf<String>()
-        try {
-            val folder = File(filesDir, "chapters/$comicId/$chapterNumber")
+    private fun copyPdfToInternalStorage(uri: Uri, comicId: Int, chapterNumber: Int): String? {
+        return try {
+            val folder = File(filesDir, "chapters/$comicId")
             if (!folder.exists()) folder.mkdirs()
             
-            uris.forEachIndexed { index, uri ->
-                val inputStream = contentResolver.openInputStream(uri) ?: return@forEachIndexed
-                val file = File(folder, "page_${index + 1}.jpg")
-                val outputStream = FileOutputStream(file)
-                
-                inputStream.copyTo(outputStream)
-                inputStream.close()
-                outputStream.close()
-                
-                savedPaths.add(file.absolutePath)
-            }
+            val file = File(folder, "chapter_$chapterNumber.pdf")
+            val inputStream = contentResolver.openInputStream(uri) ?: return null
+            val outputStream = FileOutputStream(file)
+            
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+            
+            file.absolutePath
         } catch (e: Exception) {
             e.printStackTrace()
+            null
         }
-        return savedPaths
     }
 
     private fun clearForm() {
         binding.etChapterNumber.setText("")
         binding.etChapterTitle.setText("")
-        binding.tvSelectedPdfPath.text = "Belum ada gambar terpilih"
-        binding.rvImagePreview.visibility = View.GONE
-        selectedImages.clear()
+        binding.tvSelectedPdfPath.text = getString(R.string.no_pdf_selected)
+        selectedPdfUri = null
     }
 }

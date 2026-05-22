@@ -141,56 +141,56 @@ object DummyData {
     // ─────────────────────────────────────────────────────────
     val chapterList: List<Chapter> = listOf(
         // One Piece (comicId = 1)
-        Chapter(1, 1, 1111, "Chapter 1111 - Elbaf", uploadDate = "2 jam lalu"),
-        Chapter(2, 1, 1110, "Chapter 1110 - The Giant Alliance", uploadDate = "1 mgg lalu"),
-        Chapter(3, 1, 1109, "Chapter 1109 - Countdown", uploadDate = "2 mgg lalu"),
-        Chapter(4, 1, 1108, "Chapter 1108 - Awakening", uploadDate = "3 mgg lalu"),
-        Chapter(5, 1, 1107, "Chapter 1107 - Gear 5 Unleashed", uploadDate = "1 bln lalu"),
+        Chapter(1, 1, 1111, "Chapter 1111 - Elbaf", uploadDate = "2 jam lalu", pdfPath = null),
+        Chapter(2, 1, 1110, "Chapter 1110 - The Giant Alliance", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(3, 1, 1109, "Chapter 1109 - Countdown", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(4, 1, 1108, "Chapter 1108 - Awakening", uploadDate = "3 mgg lalu", pdfPath = null),
+        Chapter(5, 1, 1107, "Chapter 1107 - Gear 5 Unleashed", uploadDate = "1 bln lalu", pdfPath = null),
 
         // Naruto Shippuden (comicId = 2)
-        Chapter(6,  2, 97,  "Chapter 97 - The Chronicle Karma", uploadDate = "1 hari lalu"),
-        Chapter(7,  2, 96,  "Chapter 96 - Sasuke's Choice", uploadDate = "1 mgg lalu"),
-        Chapter(8,  2, 95,  "Chapter 95 - Battle at the Valley", uploadDate = "2 mgg lalu"),
-        Chapter(9,  2, 94,  "Chapter 94 - Reunion", uploadDate = "3 mgg lalu"),
-        Chapter(10, 2, 93,  "Chapter 93 - The Hidden Truth", uploadDate = "1 bln lalu"),
+        Chapter(6,  2, 97,  "Chapter 97 - The Chronicle Karma", uploadDate = "1 hari lalu", pdfPath = null),
+        Chapter(7,  2, 96,  "Chapter 96 - Sasuke's Choice", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(8,  2, 95,  "Chapter 95 - Battle at the Valley", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(9,  2, 94,  "Chapter 94 - Reunion", uploadDate = "3 mgg lalu", pdfPath = null),
+        Chapter(10, 2, 93,  "Chapter 93 - The Hidden Truth", uploadDate = "1 bln lalu", pdfPath = null),
 
         // Jujutsu Kaisen (comicId = 3)
-        Chapter(11, 3, 264, "Chapter 264 - Star and Oil", uploadDate = "3 hari lalu"),
-        Chapter(12, 3, 263, "Chapter 263 - Inhuman Makings", uploadDate = "1 mgg lalu"),
-        Chapter(13, 3, 262, "Chapter 262 - The Decisive Battle", uploadDate = "2 mgg lalu"),
-        Chapter(14, 3, 261, "Chapter 261 - Iron Hammer", uploadDate = "3 mgg lalu"),
-        Chapter(15, 3, 260, "Chapter 260 - New Vessel", uploadDate = "1 bln lalu"),
+        Chapter(11, 3, 264, "Chapter 264 - Star and Oil", uploadDate = "3 hari lalu", pdfPath = null),
+        Chapter(12, 3, 263, "Chapter 263 - Inhuman Makings", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(13, 3, 262, "Chapter 262 - The Decisive Battle", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(14, 3, 261, "Chapter 261 - Iron Hammer", uploadDate = "3 mgg lalu", pdfPath = null),
+        Chapter(15, 3, 260, "Chapter 260 - New Vessel", uploadDate = "1 bln lalu", pdfPath = null),
 
         // Demon Slayer (comicId = 4)
-        Chapter(16, 4, 205, "Chapter 205 - Epilogue", uploadDate = "5 hari lalu"),
-        Chapter(17, 4, 204, "Chapter 204 - The End of Infinity", uploadDate = "2 mgg lalu"),
-        Chapter(18, 4, 203, "Chapter 203 - Life Shining Across the Years", uploadDate = "3 mgg lalu"),
+        Chapter(16, 4, 205, "Chapter 205 - Epilogue", uploadDate = "5 hari lalu", pdfPath = null),
+        Chapter(17, 4, 204, "Chapter 204 - The End of Infinity", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(18, 4, 203, "Chapter 203 - Life Shining Across the Years", uploadDate = "3 mgg lalu", pdfPath = null),
 
         // Attack on Titan (comicId = 5)
-        Chapter(19, 5, 139, "Chapter 139 - Toward the Tree on the Hill", uploadDate = "1 mgg lalu"),
-        Chapter(20, 5, 138, "Chapter 138 - A Long Dream", uploadDate = "2 mgg lalu"),
-        Chapter(21, 5, 137, "Chapter 137 - Titans", uploadDate = "3 mgg lalu"),
+        Chapter(19, 5, 139, "Chapter 139 - Toward the Tree on the Hill", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(20, 5, 138, "Chapter 138 - A Long Dream", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(21, 5, 137, "Chapter 137 - Titans", uploadDate = "3 mgg lalu", pdfPath = null),
 
         // Solo Leveling (comicId = 7)
-        Chapter(22, 7, 179, "Chapter 179 - The End and the Beginning", uploadDate = "5 hari lalu"),
-        Chapter(23, 7, 178, "Chapter 178 - Ashborn's Legacy", uploadDate = "2 mgg lalu"),
-        Chapter(24, 7, 177, "Chapter 177 - The Shadow Monarch", uploadDate = "3 mgg lalu"),
-        Chapter(25, 7, 176, "Chapter 176 - Arise", uploadDate = "1 bln lalu"),
+        Chapter(22, 7, 179, "Chapter 179 - The End and the Beginning", uploadDate = "5 hari lalu", pdfPath = null),
+        Chapter(23, 7, 178, "Chapter 178 - Ashborn's Legacy", uploadDate = "2 mgg lalu", pdfPath = null),
+        Chapter(24, 7, 177, "Chapter 177 - The Shadow Monarch", uploadDate = "3 mgg lalu", pdfPath = null),
+        Chapter(25, 7, 176, "Chapter 176 - Arise", uploadDate = "1 bln lalu", pdfPath = null),
 
         // Dragon Ball Super (comicId = 10)
-        Chapter(26, 10, 101, "Chapter 101 - The New Threat", uploadDate = "1 hari lalu"),
-        Chapter(27, 10, 100, "Chapter 100 - Anniversary", uploadDate = "1 mgg lalu"),
-        Chapter(28, 10, 99,  "Chapter 99 - Ultra Ego", uploadDate = "2 mgg lalu"),
+        Chapter(26, 10, 101, "Chapter 101 - The New Threat", uploadDate = "1 hari lalu", pdfPath = null),
+        Chapter(27, 10, 100, "Chapter 100 - Anniversary", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(28, 10, 99,  "Chapter 99 - Ultra Ego", uploadDate = "2 mgg lalu", pdfPath = null),
 
         // My Hero Academia (comicId = 11)
-        Chapter(29, 11, 430, "Chapter 430 - Finale", uploadDate = "2 jam lalu"),
-        Chapter(30, 11, 429, "Chapter 429 - Last Battle", uploadDate = "1 mgg lalu"),
-        Chapter(31, 11, 428, "Chapter 428 - Symbol of Peace", uploadDate = "2 mgg lalu"),
+        Chapter(29, 11, 430, "Chapter 430 - Finale", uploadDate = "2 jam lalu", pdfPath = null),
+        Chapter(30, 11, 429, "Chapter 429 - Last Battle", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(31, 11, 428, "Chapter 428 - Symbol of Peace", uploadDate = "2 mgg lalu", pdfPath = null),
 
         // Chainsaw Man (comicId = 12)
-        Chapter(32, 12, 168, "Chapter 168 - My Battle", uploadDate = "4 hari lalu"),
-        Chapter(33, 12, 167, "Chapter 167 - Guns and Chainsaws", uploadDate = "1 mgg lalu"),
-        Chapter(34, 12, 166, "Chapter 166 - Darkness Devil", uploadDate = "2 mgg lalu")
+        Chapter(32, 12, 168, "Chapter 168 - My Battle", uploadDate = "4 hari lalu", pdfPath = null),
+        Chapter(33, 12, 167, "Chapter 167 - Guns and Chainsaws", uploadDate = "1 mgg lalu", pdfPath = null),
+        Chapter(34, 12, 166, "Chapter 166 - Darkness Devil", uploadDate = "2 mgg lalu", pdfPath = null)
     )
 
     data class LibraryComic(
