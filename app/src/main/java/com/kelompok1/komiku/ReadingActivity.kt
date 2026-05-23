@@ -79,10 +79,23 @@ class ReadingActivity : AppCompatActivity() {
         updateReadingHistory(comicId, chapterId)
 
         binding.btnReadBack.setOnClickListener { finish() }
+        binding.btnReadMenu.setOnClickListener {
+            showReadingMenuBottomSheet(comicId, chapterId)
+        }
         setupChapterNav(comicId, chapterId)
 
         // Hide custom scroll thumb as PDFView has its own or we might not need it
         binding.scrollThumb.visibility = View.GONE
+    }
+
+    private fun isHorizontalMode(): Boolean {
+        val prefs = getSharedPreferences("komiku_prefs", MODE_PRIVATE)
+        return prefs.getBoolean("read_horizontal_mode", false)
+    }
+
+    private fun setHorizontalMode(horizontal: Boolean) {
+        val prefs = getSharedPreferences("komiku_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("read_horizontal_mode", horizontal).apply()
     }
 
     private fun loadChapterData(chapterId: Int) {
@@ -92,19 +105,108 @@ class ReadingActivity : AppCompatActivity() {
                 if (chapter.pdfPath != null) {
                     val file = File(chapter.pdfPath)
                     if (file.exists()) {
+                        binding.pdfView.visibility = View.VISIBLE
+                        binding.layoutEmptyPdf.visibility = View.GONE
+                        val isHorizontal = isHorizontalMode()
                         binding.pdfView.fromFile(file)
                             .enableSwipe(true)
-                            .swipeHorizontal(false)
+                            .swipeHorizontal(isHorizontal)
                             .enableDoubletap(true)
                             .defaultPage(0)
                             .load()
                     } else {
-                        Toast.makeText(this@ReadingActivity, "File PDF tidak ditemukan", Toast.LENGTH_SHORT).show()
+                        binding.pdfView.visibility = View.GONE
+                        binding.layoutEmptyPdf.visibility = View.VISIBLE
                     }
                 } else {
-                    Toast.makeText(this@ReadingActivity, "Chapter ini belum memiliki file PDF", Toast.LENGTH_SHORT).show()
+                    binding.pdfView.visibility = View.GONE
+                    binding.layoutEmptyPdf.visibility = View.VISIBLE
                 }
             }
+        }
+    }
+
+    private fun showReadingMenuBottomSheet(comicId: Int, currentChapterId: Int) {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val sheetBinding = com.kelompok1.komiku.databinding.LayoutBottomSheetReadingMenuBinding.inflate(layoutInflater)
+        dialog.setContentView(sheetBinding.root)
+
+        // 1. Configure Mode selection
+        val isHorizontal = isHorizontalMode()
+        updateModeSelectionUi(sheetBinding, isHorizontal)
+
+        sheetBinding.cardModeVertical.setOnClickListener {
+            if (isHorizontalMode()) {
+                setHorizontalMode(false)
+                updateModeSelectionUi(sheetBinding, false)
+                loadChapterData(currentChapterId) // Reload PDF with vertical scroll
+            }
+        }
+
+        sheetBinding.cardModeHorizontal.setOnClickListener {
+            if (!isHorizontalMode()) {
+                setHorizontalMode(true)
+                updateModeSelectionUi(sheetBinding, true)
+                loadChapterData(currentChapterId) // Reload PDF with horizontal scroll
+            }
+        }
+
+        // 2. Load and bind chapter list
+        sheetBinding.rvSheetChapters.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        lifecycleScope.launch {
+            chapterRepository.getChaptersByComicId(comicId).collectLatest { chapters ->
+                sheetBinding.rvSheetChapters.adapter = com.kelompok1.komiku.adapter.ChapterAdapter(
+                    chapters = chapters,
+                    isAdminMode = false,
+                    onDeleteClick = null,
+                    onEditClick = null,
+                    onReadClick = { chapter ->
+                        dialog.dismiss()
+                        if (chapter.id != currentChapterId) {
+                            restartWithChapter(comicId, chapter.id, chapter.title)
+                        }
+                    }
+                )
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun updateModeSelectionUi(sheetBinding: com.kelompok1.komiku.databinding.LayoutBottomSheetReadingMenuBinding, isHorizontal: Boolean) {
+        val activeColor = resources.getColor(R.color.accent, theme)
+        val inactiveColor = resources.getColor(R.color.dk_muted, theme)
+        val activeStrokeColor = resources.getColor(R.color.accent, theme)
+        val inactiveStrokeColor = resources.getColor(R.color.dk_border, theme)
+        
+        if (isHorizontal) {
+            // Horizontal active
+            sheetBinding.cardModeHorizontal.strokeColor = activeStrokeColor
+            sheetBinding.cardModeHorizontal.strokeWidth = (1.5 * resources.displayMetrics.density).toInt()
+            sheetBinding.ivModeHorizontal.setColorFilter(activeColor)
+            sheetBinding.tvModeHorizontal.setTextColor(activeColor)
+            sheetBinding.tvModeHorizontal.setTypeface(null, android.graphics.Typeface.BOLD)
+
+            // Vertical inactive
+            sheetBinding.cardModeVertical.strokeColor = inactiveStrokeColor
+            sheetBinding.cardModeVertical.strokeWidth = (1.0 * resources.displayMetrics.density).toInt()
+            sheetBinding.ivModeVertical.setColorFilter(inactiveColor)
+            sheetBinding.tvModeVertical.setTextColor(inactiveColor)
+            sheetBinding.tvModeVertical.setTypeface(null, android.graphics.Typeface.NORMAL)
+        } else {
+            // Vertical active
+            sheetBinding.cardModeVertical.strokeColor = activeStrokeColor
+            sheetBinding.cardModeVertical.strokeWidth = (1.5 * resources.displayMetrics.density).toInt()
+            sheetBinding.ivModeVertical.setColorFilter(activeColor)
+            sheetBinding.tvModeVertical.setTextColor(activeColor)
+            sheetBinding.tvModeVertical.setTypeface(null, android.graphics.Typeface.BOLD)
+
+            // Horizontal inactive
+            sheetBinding.cardModeHorizontal.strokeColor = inactiveStrokeColor
+            sheetBinding.cardModeHorizontal.strokeWidth = (1.0 * resources.displayMetrics.density).toInt()
+            sheetBinding.ivModeHorizontal.setColorFilter(inactiveColor)
+            sheetBinding.tvModeHorizontal.setTextColor(inactiveColor)
+            sheetBinding.tvModeHorizontal.setTypeface(null, android.graphics.Typeface.NORMAL)
         }
     }
 

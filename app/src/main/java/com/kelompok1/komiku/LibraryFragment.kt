@@ -65,34 +65,54 @@ class LibraryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        libraryAdapter = LibraryAdapter(filteredItems) { item ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                val chapters = chapterRepository.getChaptersByComicId(item.comic.id).first()
-                if (chapters.isNotEmpty()) {
-                    // Try to find the chapter matching current progress, otherwise take the first available
-                    val targetChapter = chapters.find { it.number == item.library.currentChapter } ?: chapters.last()
-                    
-                    val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
-                        putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
-                        putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, targetChapter.title)
-                        putExtra(ReadingActivity.EXTRA_CHAPTER_ID, targetChapter.id)
-                        putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
+        libraryAdapter = LibraryAdapter(
+            items = filteredItems,
+            onDeleteClick = { item ->
+                confirmDeleteLibrary(item)
+            },
+            onItemClick = { item ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val chapters = chapterRepository.getChaptersByComicId(item.comic.id).first()
+                    if (chapters.isNotEmpty()) {
+                        // Try to find the chapter matching current progress, otherwise take the first available
+                        val targetChapter = chapters.find { it.number == item.library.currentChapter } ?: chapters.last()
+                        
+                        val intent = Intent(requireContext(), ReadingActivity::class.java).apply {
+                            putExtra(ReadingActivity.EXTRA_COMIC_TITLE, item.comic.title)
+                            putExtra(ReadingActivity.EXTRA_CHAPTER_TITLE, targetChapter.title)
+                            putExtra(ReadingActivity.EXTRA_CHAPTER_ID, targetChapter.id)
+                            putExtra(ReadingActivity.EXTRA_COMIC_ID, item.comic.id)
+                        }
+                        startActivity(intent)
+                    } else {
+                        // Fallback to detail if no chapters found
+                        val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                            putExtra(DetailActivity.EXTRA_COMIC_ID, item.comic.id)
+                        }
+                        startActivity(intent)
                     }
-                    startActivity(intent)
-                } else {
-                    // Fallback to detail if no chapters found
-                    val intent = Intent(requireContext(), DetailActivity::class.java).apply {
-                        putExtra(DetailActivity.EXTRA_COMIC_ID, item.comic.id)
-                    }
-                    startActivity(intent)
                 }
             }
-        }
+        )
         binding.rvLibrary.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = libraryAdapter
         }
         updateEmptyState()
+    }
+
+    private fun confirmDeleteLibrary(item: LibraryComicJoin) {
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Hapus Riwayat")
+            .setMessage("Apakah Anda yakin ingin menghapus '${item.comic.title}' dari riwayat bacaan Anda?")
+            .setPositiveButton("Hapus") { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    comicRepository.removeFromLibrary(item.library)
+                    android.widget.Toast.makeText(requireContext(), "Riwayat berhasil dihapus", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
     }
 
     private fun setupSearch() {

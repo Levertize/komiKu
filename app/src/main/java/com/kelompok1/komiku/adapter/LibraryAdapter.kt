@@ -16,6 +16,7 @@ import java.io.File
 
 class LibraryAdapter(
     private val items: List<LibraryComicJoin>,
+    private val onDeleteClick: (LibraryComicJoin) -> Unit,
     private val onItemClick: (LibraryComicJoin) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.ViewHolder>() {
 
@@ -24,6 +25,7 @@ class LibraryAdapter(
         val tvChapter: TextView = view.findViewById(R.id.tv_lib_chapter)
         val progressBar: ProgressBar = view.findViewById(R.id.pb_lib_progress)
         val ivThumb: ImageView = view.findViewById(R.id.iv_lib_thumb)
+        val btnDelete: View = view.findViewById(R.id.btn_delete_lib)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,6 +61,7 @@ class LibraryAdapter(
             setGradientCover(holder, comic)
         }
 
+        holder.btnDelete.setOnClickListener { onDeleteClick(item) }
         holder.itemView.setOnClickListener { onItemClick(item) }
     }
 

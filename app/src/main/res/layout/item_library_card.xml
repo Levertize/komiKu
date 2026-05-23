@@ -57,6 +57,20 @@
                 android:textStyle="bold"
                 android:textColor="@color/white" />
 
+            <!-- Delete Button (Top-Right Overlay) -->
+            <ImageButton
+                android:id="@+id/btn_delete_lib"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_trash"
+                android:background="@drawable/bg_circle_white_trans"
+                app:tint="#F43F5E"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Hapus dari Library" />
+
         </FrameLayout>
 
         <!-- Info section -->
