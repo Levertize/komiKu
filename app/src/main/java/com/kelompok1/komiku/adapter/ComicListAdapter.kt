@@ -72,8 +72,13 @@ class ComicListAdapter(
             holder.tvBadge.visibility = View.GONE
         }
 
-        holder.btnBookmark.setOnClickListener {
-            onBookmarkClick?.invoke(comic)
+        if (onBookmarkClick == null) {
+            holder.btnBookmark.visibility = View.GONE
+        } else {
+            holder.btnBookmark.visibility = View.VISIBLE
+            holder.btnBookmark.setOnClickListener {
+                onBookmarkClick.invoke(comic)
+            }
         }
 
         holder.itemView.setOnClickListener { onItemClick(comic) }

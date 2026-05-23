@@ -7,116 +7,193 @@
     android:background="@color/dk_bg"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <!-- Premium Header Card -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/chapter_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp"
-        android:background="@drawable/bg_detail_overlay"
-        android:elevation="4dp"
+        app:cardBackgroundColor="@color/dk_card"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/dk_border"
+        app:cardCornerRadius="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btn_admin_chapter_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_chevron_left"
-            android:contentDescription="Back"
-            app:tint="@color/dk_text" />
-
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tv_admin_comic_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comic Title"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/dk_text"
-                android:maxLines="1"
-                android:ellipsize="end" />
+            <ImageButton
+                android:id="@+id/btn_admin_chapter_back"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_clear_btn"
+                android:src="@drawable/ic_chevron_left"
+                android:contentDescription="Kembali"
+                app:tint="@color/dk_text" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Kelola Chapter &amp; Konten"
-                android:textSize="12sp"
-                android:textColor="@color/dk_muted"
-                android:layout_marginTop="1dp" />
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_admin_comic_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comic Title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/dk_text"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kelola Chapter &amp; Konten PDF"
+                    android:textSize="11sp"
+                    android:textColor="@color/dk_muted"
+                    android:layout_marginTop="1dp" />
+            </LinearLayout>
+
         </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/form_chapter"
+    <!-- Scrollable content wrapper for Form and List -->
+    <!-- Form Chapter wrapped inside a beautiful CardView -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/form_chapter_card"
+        style="@style/Widget.KomiKu.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
+        android:layout_margin="16dp"
         app:layout_constraintTop_toBottomOf="@id/chapter_header">
 
-        <EditText
-            android:id="@+id/et_chapter_number"
+        <LinearLayout
+            android:id="@+id/form_chapter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nomor Chapter (e.g. 10)"
-            android:inputType="number"
-            android:textColor="@color/dk_text"
-            android:textColorHint="@color/dk_muted" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <EditText
-            android:id="@+id/et_chapter_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Judul Chapter (e.g. Chapter 10 - Fight)"
-            android:inputType="text"
-            android:textColor="@color/dk_text"
-            android:textColorHint="@color/dk_muted"
-            android:layout_marginTop="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="INPUT DATA CHAPTER"
+                android:textColor="@color/accent"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="12dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_select_pdf"
-            style="@style/Widget.KomiKu.Button.Outline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_select_pdf"
-            android:layout_marginTop="16dp"
-            app:icon="@drawable/ic_chapter" />
+            <!-- Chapter Number Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.KomiKu.TextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/ic_chapter"
+                app:startIconTint="@color/accent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_chapter_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nomor Chapter (e.g. 10)"
+                    android:inputType="number"
+                    android:textColor="@color/dk_text"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_selected_pdf_path"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_pdf_selected"
-            android:textSize="10sp"
-            android:textColor="@color/dk_hint"
-            android:layout_marginTop="4dp" />
+            <!-- Chapter Title Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.KomiKu.TextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_chapter_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Judul Chapter (e.g. Fight to Death)"
+                    android:inputType="text"
+                    android:textColor="@color/dk_text"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_save_chapter"
-            style="@style/Widget.KomiKu.Button.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Simpan Chapter"
-            android:layout_marginTop="16dp" />
+            <!-- PDF Selector Layout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
 
-    </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_select_pdf"
+                    style="@style/Widget.KomiKu.Button.Outline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_select_pdf"
+                    android:textSize="11sp"
+                    app:icon="@drawable/ic_chapter"
+                    app:iconTint="@color/accent"
+                    app:iconSize="14dp" />
 
+                <!-- PDF File Status Container -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/dk_border"
+                    app:cardBackgroundColor="@color/dk_card2"
+                    app:cardCornerRadius="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_selected_pdf_path"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_pdf_selected"
+                        android:textSize="10sp"
+                        android:textColor="@color/dk_muted"
+                        android:padding="8dp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Save Action Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_chapter"
+                style="@style/Widget.KomiKu.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Simpan Chapter"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="14dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Chapter List RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_admin_chapters"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/form_chapter"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/form_chapter_card"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
