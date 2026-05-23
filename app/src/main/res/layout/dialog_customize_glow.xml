@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/dk_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kustomisasi Glow Border"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/accent"
+            android:letterSpacing="0.03"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Live Preview Container -->
+        <FrameLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp">
+
+            <com.kelompok1.komiku.view.GlowAvatarView
+                android:id="@+id/dialog_preview_glow_container"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_dialog_glow_preview"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_avatar_placeholder"
+                    android:background="@drawable/bg_avatar"
+                    android:contentDescription="Pratinjau Avatar"
+                    android:padding="2dp" />
+
+            </com.kelompok1.komiku.view.GlowAvatarView>
+
+        </FrameLayout>
+
+        <!-- Toggle Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_setting_row"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Aktifkan Efek Glow"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/dk_text" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_glow_enable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:trackTint="@drawable/selector_switch_track"
+                app:thumbTint="@color/white" />
+
+        </LinearLayout>
+
+        <!-- Customization controls group -->
+        <LinearLayout
+            android:id="@+id/layout_glow_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Section: Color -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="PILIH WARNA NEON"
+                android:textSize="8.5sp"
+                android:textStyle="bold"
+                android:textColor="@color/accent"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="18dp">
+
+                <!-- Cyan Color Circle -->
+                <FrameLayout
+                    android:id="@+id/btn_color_cyan"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:backgroundTint="#00F3FF"/>
+                    <View
+                        android:id="@+id/border_color_cyan"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_ring"
+                        android:backgroundTint="@color/accent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <!-- Red Color Circle -->
+                <FrameLayout
+                    android:id="@+id/btn_color_red"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:backgroundTint="#FF0055"/>
+                    <View
+                        android:id="@+id/border_color_red"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_ring"
+                        android:backgroundTint="@color/accent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <!-- Gold Color Circle -->
+                <FrameLayout
+                    android:id="@+id/btn_color_gold"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:backgroundTint="#FFD700"/>
+                    <View
+                        android:id="@+id/border_color_gold"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_ring"
+                        android:backgroundTint="@color/accent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <!-- Green Color Circle -->
+                <FrameLayout
+                    android:id="@+id/btn_color_green"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:backgroundTint="#39FF14"/>
+                    <View
+                        android:id="@+id/border_color_green"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_ring"
+                        android:backgroundTint="@color/accent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+                <!-- Purple Color Circle -->
+                <FrameLayout
+                    android:id="@+id/btn_color_purple"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:backgroundTint="#9D00FF"/>
+                    <View
+                        android:id="@+id/border_color_purple"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_ring"
+                        android:backgroundTint="@color/accent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <!-- Section: Style -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="GAYA ANIMASI GLOW"
+                android:textSize="8.5sp"
+                android:textStyle="bold"
+                android:textColor="@color/accent"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rg_glow_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <RadioButton
+                    android:id="@+id/rb_style_solid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solid (Outline Statis &amp; Glow Lembut)"
+                    android:textSize="10.5sp"
+                    android:textColor="@color/dk_text"
+                    android:buttonTint="@color/accent" />
+
+                <RadioButton
+                    android:id="@+id/rb_style_breathing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Breathing (Glow Berdenyut Halus)"
+                    android:textSize="10.5sp"
+                    android:textColor="@color/dk_text"
+                    android:buttonTint="@color/accent" />
+
+                <RadioButton
+                    android:id="@+id/rb_style_rgb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RGB Wave (Gradien Berputar 360°)"
+                    android:textSize="10.5sp"
+                    android:textColor="@color/dk_text"
+                    android:buttonTint="@color/accent" />
+
+                <RadioButton
+                    android:id="@+id/rb_style_blink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Neon Blink (Cyberpunk Flicker)"
+                    android:textSize="10.5sp"
+                    android:textColor="@color/dk_text"
+                    android:buttonTint="@color/accent" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <!-- Actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_glow_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Batal"
+                android:textColor="@color/dk_muted"
+                android:textSize="11sp"
+                app:rippleColor="@color/dk_hint" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_glow_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:layout_marginStart="8dp"
+                android:text="Simpan"
+                android:textSize="11sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/accent"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

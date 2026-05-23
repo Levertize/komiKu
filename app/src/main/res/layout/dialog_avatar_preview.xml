@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:strokeWidth="1.2dp"
+    app:strokeColor="@color/dk_border"
+    app:cardBackgroundColor="@color/dk_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Foto Profil"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/dk_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pratinjau foto profil Anda saat ini"
+            android:textSize="10.5sp"
+            android:textColor="@color/dk_muted"
+            android:layout_marginTop="2dp" />
+
+        <!-- Circular Preview Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="90dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1.5dp"
+            app:strokeColor="@color/accent">
+
+            <ImageView
+                android:id="@+id/iv_dialog_avatar_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/dk_card2"
+                android:contentDescription="Pratinjau Foto Profil" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dk_border"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Ubah Foto Profil Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_avatar_change"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Ubah Foto Profil"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/accent"
+            app:cornerRadius="12dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+        <!-- Hapus Foto Profil Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_avatar_delete"
+            style="@style/Widget.KomiKu.Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="Hapus Foto Profil"
+            android:textColor="@color/color_hot"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:strokeColor="@color/color_hot"
+            app:cornerRadius="12dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+        <!-- Batal Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_avatar_close"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Batal"
+            android:textSize="12sp"
+            android:textColor="@color/dk_muted"
+            app:rippleColor="#1A7C5CFC" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

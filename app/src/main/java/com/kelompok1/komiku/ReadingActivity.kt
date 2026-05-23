@@ -181,29 +181,29 @@ class ReadingActivity : AppCompatActivity() {
         
         if (isHorizontal) {
             // Horizontal active
-            sheetBinding.cardModeHorizontal.strokeColor = activeStrokeColor
-            sheetBinding.cardModeHorizontal.strokeWidth = (1.5 * resources.displayMetrics.density).toInt()
+            sheetBinding.cardModeHorizontal.setStrokeColor(android.content.res.ColorStateList.valueOf(activeStrokeColor))
+            sheetBinding.cardModeHorizontal.setStrokeWidth((1.5 * resources.displayMetrics.density).toInt())
             sheetBinding.ivModeHorizontal.setColorFilter(activeColor)
             sheetBinding.tvModeHorizontal.setTextColor(activeColor)
             sheetBinding.tvModeHorizontal.setTypeface(null, android.graphics.Typeface.BOLD)
 
             // Vertical inactive
-            sheetBinding.cardModeVertical.strokeColor = inactiveStrokeColor
-            sheetBinding.cardModeVertical.strokeWidth = (1.0 * resources.displayMetrics.density).toInt()
+            sheetBinding.cardModeVertical.setStrokeColor(android.content.res.ColorStateList.valueOf(inactiveStrokeColor))
+            sheetBinding.cardModeVertical.setStrokeWidth((1.0 * resources.displayMetrics.density).toInt())
             sheetBinding.ivModeVertical.setColorFilter(inactiveColor)
             sheetBinding.tvModeVertical.setTextColor(inactiveColor)
             sheetBinding.tvModeVertical.setTypeface(null, android.graphics.Typeface.NORMAL)
         } else {
             // Vertical active
-            sheetBinding.cardModeVertical.strokeColor = activeStrokeColor
-            sheetBinding.cardModeVertical.strokeWidth = (1.5 * resources.displayMetrics.density).toInt()
+            sheetBinding.cardModeVertical.setStrokeColor(android.content.res.ColorStateList.valueOf(activeStrokeColor))
+            sheetBinding.cardModeVertical.setStrokeWidth((1.5 * resources.displayMetrics.density).toInt())
             sheetBinding.ivModeVertical.setColorFilter(activeColor)
             sheetBinding.tvModeVertical.setTextColor(activeColor)
             sheetBinding.tvModeVertical.setTypeface(null, android.graphics.Typeface.BOLD)
 
             // Horizontal inactive
-            sheetBinding.cardModeHorizontal.strokeColor = inactiveStrokeColor
-            sheetBinding.cardModeHorizontal.strokeWidth = (1.0 * resources.displayMetrics.density).toInt()
+            sheetBinding.cardModeHorizontal.setStrokeColor(android.content.res.ColorStateList.valueOf(inactiveStrokeColor))
+            sheetBinding.cardModeHorizontal.setStrokeWidth((1.0 * resources.displayMetrics.density).toInt())
             sheetBinding.ivModeHorizontal.setColorFilter(inactiveColor)
             sheetBinding.tvModeHorizontal.setTextColor(inactiveColor)
             sheetBinding.tvModeHorizontal.setTypeface(null, android.graphics.Typeface.NORMAL)

@@ -21,6 +21,12 @@ import com.kelompok1.komiku.model.Comic
 import com.kelompok1.komiku.repository.ComicRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.content.Context
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
+import java.io.File
+import java.io.FileOutputStream
 
 class HomeFragment : Fragment() {
 
@@ -30,6 +36,12 @@ class HomeFragment : Fragment() {
     private var autoScrollRunnable: Runnable? = null
     
     private lateinit var comicRepository: ComicRepository
+
+    private val selectAvatarLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            saveAvatarToInternalStorage(it)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,8 +58,167 @@ class HomeFragment : Fragment() {
         val database = KomiKuDatabase.getDatabase(requireContext())
         comicRepository = ComicRepository(database.comicDao())
         
+        // Muat & pasang avatar profil
+        val prefs = requireContext().getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
+        val savedAvatarPath = prefs.getString("avatar_path", null)
+        loadAvatarImage(savedAvatarPath)
+
+        // Listener click avatar untuk membuka pratinjau foto profil
+        binding.ivAvatar.setOnClickListener {
+            showAvatarPreviewDialog()
+        }
+
+        // Listener click hamburger untuk menampilkan info pengembang
+        binding.btnHamburger.setOnClickListener {
+            showAboutDeveloperDialog()
+        }
+
         fixAvatarCircle()
         observeComics()
+    }
+
+    private fun saveAvatarToInternalStorage(uri: Uri) {
+        try {
+            val file = File(requireContext().filesDir, "avatar_user.jpg")
+            val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return
+            val outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+            
+            // Simpan path ke SharedPreferences
+            val prefs = requireContext().getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putString("avatar_path", file.absolutePath).apply()
+            
+            // Muat gambar profil baru
+            loadAvatarImage(file.absolutePath)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadAvatarImage(path: String?) {
+        if (!path.isNullOrEmpty()) {
+            val file = File(path)
+            if (file.exists()) {
+                Glide.with(this)
+                    .load(file)
+                    .circleCrop()
+                    .into(binding.ivAvatar)
+                return
+            }
+        }
+        // Fallback default
+        binding.ivAvatar.setImageResource(R.drawable.ic_avatar_placeholder)
+    }
+
+    private fun showAboutDeveloperDialog() {
+        try {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_about_developer, null)
+            val alertDialog = android.app.AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            // Transparan agar layout card membulat keliatan rapi
+            alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val btnGithub = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_dialog_github)
+            val btnClose = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_dialog_close)
+
+            btnGithub.setOnClickListener {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Levertize"))
+                    startActivity(intent)
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            btnClose.setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun showAvatarPreviewDialog() {
+        try {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_avatar_preview, null)
+            val alertDialog = android.app.AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            // Transparan agar layout card membulat keliatan rapi
+            alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val ivPreview = dialogView.findViewById<android.widget.ImageView>(R.id.iv_dialog_avatar_preview)
+            val btnChange = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_avatar_change)
+            val btnDelete = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_avatar_delete)
+            val btnClose = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_avatar_close)
+
+            // Muat foto profil saat ini ke pratinjau dialog
+            val prefs = requireContext().getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
+            val savedAvatarPath = prefs.getString("avatar_path", null)
+
+            var hasCustomAvatar = false
+            if (!savedAvatarPath.isNullOrEmpty()) {
+                val file = File(savedAvatarPath)
+                if (file.exists()) {
+                    hasCustomAvatar = true
+                    Glide.with(this)
+                        .load(file)
+                        .circleCrop()
+                        .into(ivPreview)
+                }
+            }
+            if (!hasCustomAvatar) {
+                ivPreview.setImageResource(R.drawable.ic_avatar_placeholder)
+                btnDelete.visibility = View.GONE // Sembunyikan tombol hapus jika masih menggunakan default placeholder
+            }
+
+            // Aksi Ubah Foto
+            btnChange.setOnClickListener {
+                alertDialog.dismiss()
+                selectAvatarLauncher.launch("image/*")
+            }
+
+            // Aksi Hapus Foto kustom
+            btnDelete.setOnClickListener {
+                android.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Hapus Foto Profil")
+                    .setMessage("Apakah Anda yakin ingin menghapus foto profil kustom dan kembali menggunakan default?")
+                    .setPositiveButton("Hapus") { _, _ ->
+                        try {
+                            if (!savedAvatarPath.isNullOrEmpty()) {
+                                val file = File(savedAvatarPath)
+                                if (file.exists()) {
+                                    file.delete()
+                                }
+                            }
+                            prefs.edit().remove("avatar_path").apply()
+                            loadAvatarImage(null) // Reset di UI utama
+                            alertDialog.dismiss()
+                            android.widget.Toast.makeText(requireContext(), "Foto profil berhasil dihapus", android.widget.Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    .setNegativeButton("Batal", null)
+                    .show()
+            }
+
+            // Aksi Batal
+            btnClose.setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun observeComics() {
@@ -196,6 +367,12 @@ class HomeFragment : Fragment() {
         if (binding.vpBanner.adapter != null && (binding.vpBanner.adapter?.itemCount ?: 0) > 0) {
             startAutoScroll(binding.vpBanner.adapter!!.itemCount)
         }
+        
+        // Refresh avatar & glow settings
+        val prefs = requireContext().getSharedPreferences("komiku_prefs", Context.MODE_PRIVATE)
+        val savedAvatarPath = prefs.getString("avatar_path", null)
+        loadAvatarImage(savedAvatarPath)
+        binding.layoutAvatarGlow.loadGlowSettings()
     }
 
     override fun onDestroyView() {
