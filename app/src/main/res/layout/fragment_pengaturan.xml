@@ -352,8 +352,8 @@
 
                     <ImageView
                         android:id="@+id/iv_settings_avatar"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_avatar_placeholder"
                         android:background="@drawable/bg_avatar"
