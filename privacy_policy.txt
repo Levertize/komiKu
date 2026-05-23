@@ -1,0 +1,23 @@
+KEBIJAKAN PRIVASI (PRIVACY POLICY) - KOMIKU
+
+Terakhir Diperbarui: Mei 2026
+
+KomiKu ("kami") berkomitmen untuk melindungi privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana informasi Anda dikumpulkan, digunakan, dan disimpan saat Anda menggunakan aplikasi mobile KomiKu.
+
+1. Informasi yang Kami Kumpulkan
+Aplikasi KomiKu berjalan secara lokal pada perangkat Android Anda dan tidak mengirimkan data pribadi Anda ke server eksternal apa pun.
+- Informasi Akun (Lokal): Kami menggunakan SharedPreferences untuk menyimpan status login sesi sederhana Anda (misalnya status admin/pengguna biasa) demi kenyamanan akses masuk ke aplikasi.
+- Penyimpanan Lokal & Database: Kami menggunakan SQLite (melalui Room Database) untuk menyimpan komik favorit Anda (Bookmark) dan riwayat membaca Anda pada perangkat Anda sendiri.
+- File PDF Komik: Aplikasi memerlukan izin penyimpanan untuk menyalin dan membaca file PDF komik yang Anda pilih/unggah (khusus untuk mode Admin) ke penyimpanan internal aplikasi.
+
+2. Penggunaan Informasi
+Semua informasi dan data yang dikumpulkan hanya digunakan untuk meningkatkan pengalaman membaca Anda di dalam aplikasi KomiKu secara langsung pada perangkat Anda. Kami tidak membagikan, menjual, atau mentransfer data Anda kepada pihak ketiga mana pun.
+
+3. Keamanan Data
+Karena data Anda disimpan secara lokal di penyimpanan internal perangkat Anda, keamanan data Anda sangat bergantung pada keamanan perangkat fisik Anda sendiri. Kami menyarankan Anda untuk menjaga keamanan perangkat Anda dari akses yang tidak sah.
+
+4. Perubahan pada Kebijakan Privasi Ini
+Kami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Setiap perubahan akan diperbarui langsung dalam dokumen ini.
+
+5. Hubungi Kami
+Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, Anda dapat menghubungi kami melalui pengembang aplikasi KomiKu (Mohamad Dimas Arjuna & Iqbal Dwi Ganjar).

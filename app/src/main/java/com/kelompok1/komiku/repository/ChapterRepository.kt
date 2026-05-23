@@ -10,4 +10,7 @@ class ChapterRepository(private val chapterDao: ChapterDao) {
         
     suspend fun getChapterById(id: Int): Chapter? = 
         chapterDao.getChapterById(id)
+
+    suspend fun deleteChapter(chapter: Chapter) =
+        chapterDao.deleteChapter(chapter)
 }

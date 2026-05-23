@@ -1,0 +1,16 @@
+KomiKu - Aplikasi Pembaca Komik Android
+
+KomiKu adalah aplikasi Android modern yang dirancang khusus untuk para pencinta komik (Manga, Manhwa, Manhua, dan Webtoon). Aplikasi ini memungkinkan pengguna untuk membaca komik lokal berformat PDF secara lancar dengan antarmuka yang bersih, responsif, dan memukau.
+
+Fitur Utama:
+1. Home & Jelajahi: Dilengkapi dengan banner carousel dan pencarian/filter canggih berdasarkan format, genre, dan rating.
+2. Library Pribadi: Simpan komik favorit Anda dan pantau progres membaca Anda secara langsung.
+3. Pembaca PDF Terintegrasi: Pengalaman membaca komik vertikal (scroll) yang mulus langsung di dalam aplikasi.
+4. Mode Gelap/Terang: Antarmuka adaptif untuk kenyamanan membaca di berbagai kondisi cahaya.
+5. Panel Admin: Fitur manajemen komik dan chapter bagi admin untuk mengunggah dan memperbarui konten dengan mudah.
+
+Pengembang:
+- Mohamad Dimas Arjuna
+- Iqbal Dwi Ganjar
+- Erlangga Jaya Diputra
+Proyek Pemrograman Aplikasi Mobile

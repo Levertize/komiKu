@@ -3,6 +3,7 @@ package com.kelompok1.komiku.admin
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class AdminChapterActivity : AppCompatActivity() {
     private lateinit var chapterRepository: ChapterRepository
     private var comicId: Int = 0
     private var selectedPdfUri: Uri? = null
+    private var editingChapter: Chapter? = null
 
     // Launcher for selecting a single PDF file
     private val selectPdfLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -72,15 +74,54 @@ class AdminChapterActivity : AppCompatActivity() {
     private fun observeChapters() {
         lifecycleScope.launch {
             chapterRepository.getChaptersByComicId(comicId).collectLatest { chapters ->
-                binding.rvAdminChapters.adapter = ChapterAdapter(chapters) { chapter ->
-                    val intent = Intent(this@AdminChapterActivity, com.kelompok1.komiku.ReadingActivity::class.java).apply {
-                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_TITLE, binding.tvAdminComicTitle.text.toString())
-                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${chapter.number}")
-                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_ID, chapter.id)
-                        putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_ID, chapter.comicId)
+                binding.rvAdminChapters.adapter = ChapterAdapter(
+                    chapters = chapters,
+                    isAdminMode = true,
+                    onDeleteClick = { chapter ->
+                        deleteChapter(chapter)
+                    },
+                    onEditClick = { chapter ->
+                        startEditing(chapter)
+                    },
+                    onReadClick = { chapter ->
+                        val intent = Intent(this@AdminChapterActivity, com.kelompok1.komiku.ReadingActivity::class.java).apply {
+                            putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_TITLE, binding.tvAdminComicTitle.text.toString())
+                            putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_TITLE, "Chapter ${chapter.number}")
+                            putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_CHAPTER_ID, chapter.id)
+                            putExtra(com.kelompok1.komiku.ReadingActivity.EXTRA_COMIC_ID, chapter.comicId)
+                        }
+                        startActivity(intent)
                     }
-                    startActivity(intent)
-                }
+                )
+            }
+        }
+    }
+
+    private fun startEditing(chapter: Chapter) {
+        editingChapter = chapter
+        binding.etChapterNumber.setText(chapter.number.toString())
+        binding.etChapterTitle.setText(chapter.title)
+        binding.tvSelectedPdfPath.text = if (chapter.pdfPath != null) {
+            "PDF Saat Ini: ${chapter.pdfPath.substringAfterLast('/')}"
+        } else {
+            "Belum ada PDF (Silakan upload)"
+        }
+        binding.btnSaveChapter.text = "Update Chapter"
+        // Scroll to form
+        binding.formChapter.parent.requestChildFocus(binding.formChapter, binding.formChapter)
+    }
+
+    private fun deleteChapter(chapter: Chapter) {
+        lifecycleScope.launch {
+            if (chapter.pdfPath != null) {
+                val file = File(chapter.pdfPath)
+                if (file.exists()) file.delete()
+            }
+            
+            chapterRepository.deleteChapter(chapter)
+            Toast.makeText(this@AdminChapterActivity, "Chapter dihapus", Toast.LENGTH_SHORT).show()
+            if (editingChapter?.id == chapter.id) {
+                clearForm()
             }
         }
     }
@@ -89,7 +130,7 @@ class AdminChapterActivity : AppCompatActivity() {
         val numberString = binding.etChapterNumber.text.toString()
         val title = binding.etChapterTitle.text.toString()
 
-        if (numberString.isEmpty() || title.isEmpty() || selectedPdfUri == null) {
+        if (numberString.isEmpty() || title.isEmpty()) {
             Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             return
         }
@@ -97,31 +138,46 @@ class AdminChapterActivity : AppCompatActivity() {
         val number = numberString.toIntOrNull() ?: return
 
         lifecycleScope.launch {
-            val pdfPath = copyPdfToInternalStorage(selectedPdfUri!!, comicId, number)
-            if (pdfPath != null) {
-                val newChapter = Chapter(
-                    comicId = comicId,
-                    number = number,
-                    title = title,
-                    pdfPath = pdfPath,
-                    uploadDate = "baru saja"
-                )
-                
-                val database = KomiKuDatabase.getDatabase(this@AdminChapterActivity)
-                database.chapterDao().insertChapters(listOf(newChapter))
-                
-                // Update comic's last_update timestamp
-                val comic = database.comicDao().getComicById(comicId)
-                if (comic != null) {
-                    val updatedComic = comic.copy(lastUpdate = System.currentTimeMillis().toString())
-                    database.comicDao().updateComic(updatedComic)
+            var pdfPath = editingChapter?.pdfPath
+            
+            // If new PDF selected, copy it
+            if (selectedPdfUri != null) {
+                val newPdfPath = copyPdfToInternalStorage(selectedPdfUri!!, comicId, number)
+                if (newPdfPath != null) {
+                    // Delete old file if updating
+                    if (pdfPath != null && pdfPath != newPdfPath) {
+                        val oldFile = File(pdfPath)
+                        if (oldFile.exists()) oldFile.delete()
+                    }
+                    pdfPath = newPdfPath
+                } else {
+                    Toast.makeText(this@AdminChapterActivity, getString(R.string.copy_failed), Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
-                
-                Toast.makeText(this@AdminChapterActivity, getString(R.string.chapter_saved), Toast.LENGTH_SHORT).show()
-                clearForm()
-            } else {
-                Toast.makeText(this@AdminChapterActivity, getString(R.string.copy_failed), Toast.LENGTH_SHORT).show()
             }
+
+            val chapterToSave = Chapter(
+                id = editingChapter?.id ?: 0,
+                comicId = comicId,
+                number = number,
+                title = title,
+                pdfPath = pdfPath,
+                uploadDate = if (editingChapter != null) editingChapter!!.uploadDate else "baru saja"
+            )
+            
+            val database = KomiKuDatabase.getDatabase(this@AdminChapterActivity)
+            database.chapterDao().insertChapters(listOf(chapterToSave))
+            
+            // Update comic's last_update timestamp
+            val comic = database.comicDao().getComicById(comicId)
+            if (comic != null) {
+                val updatedComic = comic.copy(lastUpdate = System.currentTimeMillis().toString())
+                database.comicDao().updateComic(updatedComic)
+            }
+            
+            val msg = if (editingChapter != null) "Chapter diperbarui" else getString(R.string.chapter_saved)
+            Toast.makeText(this@AdminChapterActivity, msg, Toast.LENGTH_SHORT).show()
+            clearForm()
         }
     }
 
@@ -149,6 +205,8 @@ class AdminChapterActivity : AppCompatActivity() {
         binding.etChapterNumber.setText("")
         binding.etChapterTitle.setText("")
         binding.tvSelectedPdfPath.text = getString(R.string.no_pdf_selected)
+        binding.btnSaveChapter.text = "Simpan Chapter"
         selectedPdfUri = null
+        editingChapter = null
     }
 }
