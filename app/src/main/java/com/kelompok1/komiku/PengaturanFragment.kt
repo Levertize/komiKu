@@ -50,6 +50,34 @@ class PengaturanFragment : Fragment() {
             )
         }
 
+        // Muat state Mode Membaca
+        val isHorizontal = prefs.getBoolean("read_horizontal_mode", false)
+        updateReadModeStatus(isHorizontal)
+
+        binding.rowReadMode.setOnClickListener {
+            val options = arrayOf("Scroll Vertikal (Gaya Webtoon)", "Swipe Horisontal (Gaya Buku)")
+            val currentSelection = if (prefs.getBoolean("read_horizontal_mode", false)) 1 else 0
+
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Pilih Mode Membaca")
+                .setSingleChoiceItems(options, currentSelection) { dialog, which ->
+                    val isHorizontalSelected = which == 1
+                    prefs.edit().putBoolean("read_horizontal_mode", isHorizontalSelected).apply()
+                    updateReadModeStatus(isHorizontalSelected)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Batal", null)
+                .show()
+        }
+
+        // Muat state Notifikasi Update
+        val enableNotif = prefs.getBoolean("enable_notifications", true)
+        binding.switchNotif.isChecked = enableNotif
+
+        binding.switchNotif.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("enable_notifications", isChecked).apply()
+        }
+
         // Tombol Logout
         binding.rowLogout.setOnClickListener {
             prefs.edit()
@@ -69,6 +97,13 @@ class PengaturanFragment : Fragment() {
             "Aktif · Nyaman untuk mata"
         else
             "Nonaktif · Mode terang"
+    }
+
+    private fun updateReadModeStatus(isHorizontal: Boolean) {
+        binding.tvReadModeVal.text = if (isHorizontal)
+            "Swipe Horisontal (Gaya Buku)"
+        else
+            "Scroll Vertikal (Gaya Webtoon)"
     }
 
     override fun onDestroyView() {
